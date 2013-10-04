@@ -116,7 +116,7 @@ public class Client implements Runnable{
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall -> no roomKey in Hall
         frame.addHall(chatHall);
-        chatHall.addUser(username);
+        //chatHall.addUser(username);
         chatHall.enterMessage(username);
 
     }
@@ -248,6 +248,9 @@ public class Client implements Runnable{
     
     private void rvAddHallUser(String user)
     {
+        if(user==username)
+            return;
+        System.out.println("adddddddd");
         chatHall.addUser(user);
         userList.add(user);
     }
@@ -297,11 +300,11 @@ public class Client implements Runnable{
             tmp.add(userlist[i*2+2]);
             i=i+1;
         }
-        System.out.print("hahahah1");
+        //System.out.print("hahahah1");
         userList=tmp;
-        System.out.print("hahahah2");
+        //System.out.print("hahahah2");
         chatHall.displayUserList();
-        System.out.print("hahahah3");
+        //System.out.print("hahahah3");
         //chatHall.displayUserList(userList);
     }
     
@@ -311,6 +314,8 @@ public class Client implements Runnable{
         System.out.print(length);
         for(int i=3;i<length;i=i+1)
         {
+            if(userlist[i]==username)
+                continue;
             tmp.add(userlist[i]);
         }
         ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(userlist[1]);
