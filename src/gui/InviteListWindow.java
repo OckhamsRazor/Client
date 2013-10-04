@@ -17,6 +17,8 @@ public class InviteListWindow extends javax.swing.JDialog {
     /**
      * Creates new form InviteListWindow
      */
+    
+    
     public InviteListWindow(java.awt.Frame parent) {
         super(parent, true);
         initComponents();

@@ -141,7 +141,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
             if(!inputText.equals("") ){
                 showMessage();
             }
-            client.send(inputText);
+            client.sendRoomMsg(0,inputText);
         }
     }//GEN-LAST:event_inputTextPaneKeyPressed
 

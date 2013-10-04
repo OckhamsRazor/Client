@@ -141,6 +141,7 @@ public class Client implements Runnable{
                     o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
                 }
             }
+            System.out.println("hi");
             /*then check the protocol*/
     }
     public void somethingWrong() throws IOException
@@ -209,7 +210,7 @@ public class Client implements Runnable{
         send("MSG_P\000"+username+"\000"+Integer.toString(roomNumber)+"\000"+receiver+"\000"+msg);
     }
     
-    private void sendRoomMsg(int roomNumber, String msg)
+    public void sendRoomMsg(int roomNumber, String msg)
     {
         send("MSG\000"+username+"\000"+Integer.toString(roomNumber)+"\000"+msg);
     }
@@ -281,8 +282,12 @@ public class Client implements Runnable{
     {
         if(roomKey == 0){
             ChatRoomHall c = (ChatRoomHall) roomMap.get(roomKey);
+            if(sender==username)
+                return;
             c.showRecvMessage(sender, msg, false);
         }else{
+            if(sender==username)
+                return;
             ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(roomKey);
             c.showRecvMessage(sender, msg, false);
         }
@@ -376,6 +381,7 @@ public class Client implements Runnable{
         {
             try {
                 String msg=i.readUTF();
+                System.out.println(msg+" msg");
                 parseMsg(msg);
                 
             } catch (IOException ex) {
