@@ -86,7 +86,7 @@ public class Client implements Runnable{
         
         username = logWindow.username;
         password = logWindow.password; 
-
+/*
         try
         { 
             
@@ -109,12 +109,12 @@ public class Client implements Runnable{
         {
             somethingWrong();
         }
-
+*/
         // should receive user list from server!!
         isLoggedIn = true;
         
         roomList.add(chatHall);
-        roomMap.put(0,chatHall); // cannot add friends in Hall -> no roomKey in Hall
+        roomMap.put(0,chatHall); // cannot add friends in Hall
         frame.addHall(chatHall);
         //chatHall.addUser(username);
         chatHall.enterMessage(username);
@@ -237,7 +237,6 @@ public class Client implements Runnable{
        ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(roomKey);
        c.addUser(roomUser);
        c.enterMessage(roomUser);
-
     }
     
     private void rvLeaveRoomUser(String roomUser, int roomKey)
@@ -256,7 +255,7 @@ public class Client implements Runnable{
         userList.add(user);
     }
     
-    private void rvLeaveUser(String user)
+    private void rvLeaveHallUser(String user)
     {
         chatHall.deleteUser(user);
         userList.remove(user);
@@ -270,21 +269,19 @@ public class Client implements Runnable{
     private void rvWhisper(String sender, int roomKey, String msg)
     {
         if(roomKey == 0){
-            ChatRoomHall c = (ChatRoomHall) roomMap.get(roomKey);
-            c.showRecvMessage(sender, msg, false);
+            chatHall.showRecvMessage(sender, msg, true);
         }else{
             ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(roomKey);
-            c.showRecvMessage(sender, msg, false);
+            c.showRecvMessage(sender, msg, true);
         }
     }
     
     private void rvRoomMsg(String sender, int roomKey, String msg)
     {
         if(roomKey == 0){
-            ChatRoomHall c = (ChatRoomHall) roomMap.get(roomKey);
             if(sender==username)
                 return;
-            c.showRecvMessage(sender, msg, false);
+            chatHall.showRecvMessage(sender, msg, false);
         }else{
             if(sender==username)
                 return;
@@ -323,8 +320,12 @@ public class Client implements Runnable{
                 continue;
             tmp.add(userlist[i]);
         }
-        ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(userlist[1]);
-        c.updateUser(tmp);
+        if(userlist[1].equals("0")){
+            chatHall.updateUser(tmp);
+        }else{
+            ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(Integer.parseInt(userlist[1])); 
+            c.updateUser(tmp);
+        }
         //chatHall.displayUserList(tmp);
     }
     
@@ -347,7 +348,7 @@ public class Client implements Runnable{
                 rvAddHallUser(message[1]);
                 break;
             case("\001SB_LOGOUT"):
-                rvLeaveUser(message[1]);
+                rvLeaveHallUser(message[1]);
                 break;
             case("\001SB_STAT"):
                 rvChangeState(message[1],message[2]);
@@ -369,7 +370,6 @@ public class Client implements Runnable{
                 break;
             default:
                 break;
-            
         }
     }
 
@@ -394,8 +394,6 @@ public class Client implements Runnable{
             }
         }
     }
-    
-    
 }
 
 

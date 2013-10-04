@@ -29,12 +29,14 @@ public class ChatRoomHall extends javax.swing.JPanel {
     private String inputText;
     private String dialogText;
     private boolean whisper;
+    public int roomKey;
 
     // guestList elements;
     private Vector<String> userList;    // all users who connect to server
     
     public ChatRoomHall(Client c) {
         initComponents();
+        roomKey = 0;
         client = c;
         doc = inputTextPane.getStyledDocument();
         inputText = new String();
@@ -226,12 +228,16 @@ public class ChatRoomHall extends javax.swing.JPanel {
         userList.remove(user);
         userListPanel.setListData(userList);
     }
-    
+   
     public void displayUserList(/*Vector<String> userlist*/)
     {
         System.out.print("hahahah");
         userList=client.userList;
         System.out.print("hahahah");
+        userListPanel.setListData(userList);
+    }
+    public void updateUser(Vector<String> userlist){
+        userList=userlist;
         userListPanel.setListData(userList);
     }
     // no room deletion in hall

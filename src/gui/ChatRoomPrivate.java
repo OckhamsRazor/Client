@@ -7,6 +7,7 @@ package gui;
 import chatroom.Client;
 import java.util.Vector;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 
@@ -41,6 +42,8 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         userList = new Vector<String>();        // get list form server!!    
         userListPanel.setListData(userList);
         inviteList = new InviteListWindow(client.getFrame());
+        inviteList.setLocationRelativeTo(client.getFrame());
+        inviteList.setVisible(false);
         roomKey = -1;
         whisper = false;
         
@@ -175,6 +178,13 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
        inviteList.setList(client.userList);
        inviteList.setTitle("Guest List");
        inviteList.setVisible(true);
+       if(userList.contains(inviteList.getSelectedGuest())){
+           JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
+                   "Inite Error",JOptionPane.INFORMATION_MESSAGE);
+       }else{
+          // client.sendInvitation(roomKey, inviteList.getSelectedGuest() , inviteList.getMsg());
+           inviteList.resetGuest();
+       }
     }//GEN-LAST:event_inviteButtonActionPerformed
 
      private String parseInputText(String str){
