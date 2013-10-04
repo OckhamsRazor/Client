@@ -62,11 +62,21 @@ public class LogWindow extends javax.swing.JDialog {
                 logButtonActionPerformed(evt);
             }
         });
+        logButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                logButtonKeyPressed(evt);
+            }
+        });
 
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitButtonActionPerformed(evt);
+            }
+        });
+        exitButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                exitButtonKeyPressed(evt);
             }
         });
 
@@ -140,6 +150,20 @@ public class LogWindow extends javax.swing.JDialog {
     private void usernameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameTextActionPerformed
+
+    private void logButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_logButtonKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyChar() == '\n'){
+            parseLogInfo();
+        }
+    }//GEN-LAST:event_logButtonKeyPressed
+
+    private void exitButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exitButtonKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyChar() == '\n'){
+            setVisible(false);
+        }
+    }//GEN-LAST:event_exitButtonKeyPressed
     
     /**
      * @param args the command line arguments
