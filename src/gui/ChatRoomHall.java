@@ -240,14 +240,19 @@ public class ChatRoomHall extends javax.swing.JPanel {
     public void deleteUser(String user){
         userList.remove(user);
         userListPanel.setListData(userList);
+        client.userList.remove(user);
+        sendToCombo.removeItem(user);
     }
    
-    public void displayUserList(/*Vector<String> userlist*/)
+    public void displayUserList()
     {
-        //System.out.print("hahahah");
         userList=client.userList;
-        //System.out.print("hahahah");
         userListPanel.setListData(userList);
+        for(int i = 0; i < userList.size();++i){
+            if(!userList.get(i).equals(client.username))
+                sendToCombo.addItem(userList.get(i));
+        }
+        
     }
     public void updateUser(Vector<String> userlist){
         userList=userlist;

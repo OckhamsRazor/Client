@@ -56,7 +56,7 @@ public class SettingWindow extends javax.swing.JDialog {
         });
 
         portText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        portText.setText("9987");
+        portText.setText("5566");
 
         jButton1.setText("OK");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {

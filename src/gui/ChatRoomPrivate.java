@@ -196,10 +196,12 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
        inviteList.setList(client.userList);
        inviteList.setTitle("Guest List");
        inviteList.setVisible(true);
+       System.out.println(inviteList.getSelectedGuest());
        if(userList.contains(inviteList.getSelectedGuest())){
            JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
                    "Initation Error",JOptionPane.INFORMATION_MESSAGE);
        }else{
+           
            client.sendInvitation(roomKey, inviteList.getSelectedGuest() , "");      
            inviteList.resetGuest();
        }
@@ -273,6 +275,10 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     public void updateUser(Vector<String> userlist){
         userList=userlist;
         userListPanel.setListData(userList);
+        for(int i = 0; i < userList.size();++i){
+            if(!userList.get(i).equals(client.username))
+                sendToCombo.addItem(userList.get(i));
+        }
     }           
     
    public void addUser(String user){
@@ -285,6 +291,8 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     public void deleteUser(String user){
         userList.remove(user);
         userListPanel.setListData(userList);
+        client.userList.remove(user);
+        sendToCombo.removeItem(user);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

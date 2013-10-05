@@ -64,7 +64,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.222";
+        serverIP = "140.112.18.224";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -86,7 +86,6 @@ public class Client implements Runnable{
         
         username = logWindow.username;
         password = logWindow.password; 
-/*
         try
         { 
             
@@ -109,10 +108,8 @@ public class Client implements Runnable{
         {
             somethingWrong();
         }
-*/
         // should receive user list from server!!
         isLoggedIn = true;
-        
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall
         frame.addHall(chatHall);
@@ -251,14 +248,16 @@ public class Client implements Runnable{
         if(user==username)
             return;
         System.out.println("adddddddd");
-        chatHall.addUser(user);
         userList.add(user);
+        chatHall.displayUserList();
+        chatHall.enterMessage(user);
     }
     
     private void rvLeaveHallUser(String user)
     {
         chatHall.deleteUser(user);
         userList.remove(user);
+        chatHall.leaveMessage(user);
     }
     
     private void rvChangeState(String user, String status)
@@ -272,10 +271,6 @@ public class Client implements Runnable{
             if(sender==username)
                 return;
             chatHall.showRecvMessage(sender, msg, true);
-
-
-
-
         }else{
             if(sender==username)
                 return;
@@ -329,14 +324,9 @@ public class Client implements Runnable{
             tmp.add(userlist[i]);
         }
 
-        if(userlist[1].equals("0")){
-            chatHall.updateUser(tmp);
-        }else{
-            ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(Integer.parseInt(userlist[1])); 
-            c.updateUser(tmp);
-        }
+        ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(Integer.parseInt(userlist[1])); 
+        c.updateUser(tmp);
         //chatHall.displayUserList(tmp);
-
     }
     
     private void parseMsg(String msg)
@@ -389,6 +379,7 @@ public class Client implements Runnable{
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         while(true)
         {
+            
             try {
                 String msg=i.readUTF();
                 System.out.println(msg+" msg");
