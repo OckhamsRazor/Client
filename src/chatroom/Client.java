@@ -270,9 +270,12 @@ public class Client implements Runnable{
     private void rvWhisper(String sender, int roomKey, String msg)
     {
         if(roomKey == 0){
-            ChatRoomHall c = (ChatRoomHall) roomMap.get(roomKey);
-            c.showRecvMessage(sender, msg, false);
+            if(sender==username)
+                return;
+            chatHall.showRecvMessage(sender, msg, false);
         }else{
+            if(sender==username)
+                return;
             ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(roomKey);
             c.showRecvMessage(sender, msg, false);
         }
@@ -281,10 +284,9 @@ public class Client implements Runnable{
     private void rvRoomMsg(String sender, int roomKey, String msg)
     {
         if(roomKey == 0){
-            ChatRoomHall c = (ChatRoomHall) roomMap.get(roomKey);
             if(sender==username)
                 return;
-            c.showRecvMessage(sender, msg, false);
+            chatHall.showRecvMessage(sender, msg, false);
         }else{
             if(sender==username)
                 return;
@@ -305,12 +307,8 @@ public class Client implements Runnable{
             tmp.add(userlist[i*2+2]);
             i=i+1;
         }
-        //System.out.print("hahahah1");
         userList=tmp;
-        //System.out.print("hahahah2");
         chatHall.displayUserList();
-        //System.out.print("hahahah3");
-        //chatHall.displayUserList(userList);
     }
     
     public void rvRoomUserList(String[] userlist, int length)
@@ -325,7 +323,6 @@ public class Client implements Runnable{
         }
         ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(userlist[1]);
         c.updateUser(tmp);
-        //chatHall.displayUserList(tmp);
     }
     
     private void parseMsg(String msg)
