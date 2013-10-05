@@ -249,7 +249,7 @@ public class Client implements Runnable{
             return;
         System.out.println("adddddddd");
         userList.add(user);
-        chatHall.displayUserList();
+        chatHall.updateUserList(userList);
         chatHall.enterMessage(user);
     }
     
@@ -308,7 +308,7 @@ public class Client implements Runnable{
         //System.out.print("hahahah1");
         userList=tmp;
         //System.out.print("hahahah2");
-        chatHall.displayUserList();
+        chatHall.updateUserList(tmp);
         //System.out.print("hahahah3");
         //chatHall.displayUserList(userList);
     }
@@ -325,7 +325,7 @@ public class Client implements Runnable{
         }
 
         ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(Integer.parseInt(userlist[1])); 
-        c.updateUser(tmp);
+        c.updateUserList(tmp);
         //chatHall.displayUserList(tmp);
     }
     

@@ -272,8 +272,8 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         dialogTextPane.setText(dialogText);
     }
     
-    public void updateUser(Vector<String> userlist){
-        userList=userlist;
+    public void updateUserList(Vector<String> updateList){
+        userList=updateList;
         userListPanel.setListData(userList);
         for(int i = 0; i < userList.size();++i){
             if(!userList.get(i).equals(client.username))
