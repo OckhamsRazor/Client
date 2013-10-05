@@ -25,7 +25,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
 
     private Client client;
     // msgTextPane elements
-    private StyledDocument doc;         // record properties
+    private StyledDocument inputDoc;    
+    private StyledDocument dialogDoc;
     private String inputText;
     private String dialogText;
     private boolean whisper;
@@ -38,7 +39,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
         initComponents();
         roomKey = 0;
         client = c;
-        doc = inputTextPane.getStyledDocument();
+        inputDoc = inputTextPane.getStyledDocument();
+        dialogDoc = dialogTextPane.getStyledDocument();
         inputText = new String();
         dialogText = new String();              // empty string
         userList = new Vector<String>();        // get list form server!!    
@@ -173,6 +175,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
     private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
         // TODO add your handling code here:
         inputTextPane.insertIcon(new ImageIcon("cry.png"));
+        System.out.println("QQ");
     }//GEN-LAST:event_cryButtonActionPerformed
     private String parseInputText(String str){
         StringBuffer msgBuffer = new StringBuffer(""); // must create a empty buffer first
@@ -185,7 +188,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
     
     private void refreshInputPane () {
         try {
-            doc.insertString( doc.getLength(),
+            inputDoc.insertString( inputDoc.getLength(),
                               inputTextPane.getText(),
                               null );
         }
@@ -205,20 +208,14 @@ public class ChatRoomHall extends javax.swing.JPanel {
         dialogTextPane.setText(dialogText);
     }
     public void showRecvMessage(String sender, String msg, boolean whisper_recv){
-        try {
-            doc.insertString( doc.getLength(), msg,  null );
-            if(whisper_recv){
+     
+        if(whisper_recv){
                 dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :" + msg;
             }
             else{
                 dialogText = dialogText + "\n" + sender + " :" + msg;
             }
             dialogTextPane.setText(dialogText);
-        }
-        catch (BadLocationException ble) {
-            System.err.println("Couldn't insert message into dialog.");
-        }
-        
     }
     public void enterMessage(String user){
         dialogText = dialogText + "\n" +"( " + user +  " )"+" enters this room";
@@ -232,10 +229,10 @@ public class ChatRoomHall extends javax.swing.JPanel {
     
     // when other user enter/leave
     public void addUser(String user){
+        /*
         userList.add(user);
-        userListPanel.setListData(userList);
-        if(!user.equals(client.username) )
-            sendToCombo.addItem(user);
+        userListPanel.setListData(userList);    
+        */
     }
     public void deleteUser(String user){
         userList.remove(user);
@@ -244,15 +241,14 @@ public class ChatRoomHall extends javax.swing.JPanel {
         sendToCombo.removeItem(user);
     }
    
-    public void displayUserList()
+    public void updateUserList(Vector<String> updateList)
     {
-        userList=client.userList;
+        userList=updateList;
         userListPanel.setListData(userList);
         for(int i = 0; i < userList.size();++i){
             if(!userList.get(i).equals(client.username))
                 sendToCombo.addItem(userList.get(i));
         }
-        
     }
     public void updateUser(Vector<String> userlist){
         userList=userlist;
