@@ -182,7 +182,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
            JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
                    "Inite Error",JOptionPane.INFORMATION_MESSAGE);
        }else{
-          // client.sendInvitation(roomKey, inviteList.getSelectedGuest() , inviteList.getMsg());
+           client.sendInvitation(roomKey, inviteList.getSelectedGuest() , "");      
            inviteList.resetGuest();
        }
     }//GEN-LAST:event_inviteButtonActionPerformed
