@@ -62,6 +62,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         userListPanel = new javax.swing.JList();
         sendToCombo = new javax.swing.JComboBox();
+        cryButton = new javax.swing.JButton();
 
         inputTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -90,21 +91,29 @@ public class ChatRoomHall extends javax.swing.JPanel {
             }
         });
 
+        cryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/cry.png"))); // NOI18N
+        cryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cryButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(sendToCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sendToCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)))
+                        .addComponent(cryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,15 +121,17 @@ public class ChatRoomHall extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(sendToCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(sendToCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -142,8 +153,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
             System.out.println(inputText);
             if(!inputText.equals("") ){
                 showMessage();
-            }
-            client.sendRoomMsg(0,inputText);
+                client.sendRoomMsg(0,inputText);
+            }            
         }
     }//GEN-LAST:event_inputTextPaneKeyPressed
 
@@ -158,6 +169,11 @@ public class ChatRoomHall extends javax.swing.JPanel {
         // TODO add your handling code here:
         // should change color of user
     }//GEN-LAST:event_sendToComboActionPerformed
+
+    private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
+        // TODO add your handling code here:
+        inputTextPane.insertIcon(new ImageIcon("cry.png"));
+    }//GEN-LAST:event_cryButtonActionPerformed
     private String parseInputText(String str){
         StringBuffer msgBuffer = new StringBuffer(""); // must create a empty buffer first
         char[] strCharArray = str.toCharArray();
@@ -179,16 +195,6 @@ public class ChatRoomHall extends javax.swing.JPanel {
         inputTextPane.setText("");
     }
     private void showMessage(){
-        // test
-        /*
-        if(dialogText.isEmpty())    
-            dialogText = inputText;
-        else
-            dialogText = dialogText + "\n" + inputText;
-        dialogTextPane.setText(dialogText);
-        System.out.println("input: "+ inputText);
-        * */
-        // if 
         if(whisper){
             String receiver = (String)sendToCombo.getSelectedItem();
             dialogText = dialogText + "\n" + "( TO "+ receiver + " )"+client.username + " :" + inputText;
@@ -199,13 +205,20 @@ public class ChatRoomHall extends javax.swing.JPanel {
         dialogTextPane.setText(dialogText);
     }
     public void showRecvMessage(String sender, String msg, boolean whisper_recv){
-        if(whisper_recv){
-            dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :" + msg;
+        try {
+            doc.insertString( doc.getLength(), msg,  null );
+            if(whisper_recv){
+                dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :" + msg;
+            }
+            else{
+                dialogText = dialogText + "\n" + sender + " :" + msg;
+            }
+            dialogTextPane.setText(dialogText);
         }
-        else{
-            dialogText = dialogText + "\n" + sender + " :" + msg;
+        catch (BadLocationException ble) {
+            System.err.println("Couldn't insert message into dialog.");
         }
-        dialogTextPane.setText(dialogText);
+        
     }
     public void enterMessage(String user){
         dialogText = dialogText + "\n" +"( " + user +  " )"+" enters this room";
@@ -243,6 +256,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
     // no room deletion in hall
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cryButton;
     private javax.swing.JTextPane dialogTextPane;
     private javax.swing.JTextPane inputTextPane;
     private javax.swing.JScrollPane jScrollPane1;
