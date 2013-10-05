@@ -249,7 +249,7 @@ public class Client implements Runnable{
             return;
         System.out.println("adddddddd");
         userList.add(user);
-        chatHall.displayUserList();
+        chatHall.updateUserList(userList);
         chatHall.enterMessage(user);
     }
     
