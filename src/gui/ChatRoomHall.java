@@ -231,9 +231,9 @@ public class ChatRoomHall extends javax.swing.JPanel {
    
     public void displayUserList(/*Vector<String> userlist*/)
     {
-        System.out.print("hahahah");
+        //System.out.print("hahahah");
         userList=client.userList;
-        System.out.print("hahahah");
+        //System.out.print("hahahah");
         userListPanel.setListData(userList);
     }
     public void updateUser(Vector<String> userlist){
