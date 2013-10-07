@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -86,6 +87,7 @@ public class Client implements Runnable{
         
         username = logWindow.username;
         password = logWindow.password; 
+        
         try
         { 
             
@@ -102,19 +104,17 @@ public class Client implements Runnable{
             chatHall = new ChatRoomHall(this);
             thread=new Thread(this);               
             thread.start();
-            
+            isLoggedIn = true;
+            roomList.add(chatHall);
+            roomMap.put(0,chatHall); // cannot add friends in Hall
+            frame.addHall(chatHall);
+            chatHall.enterMessage(username);
         }
         catch (IOException ex)
         {
             somethingWrong();
         }
         // should receive user list from server!!
-        isLoggedIn = true;
-        roomList.add(chatHall);
-        roomMap.put(0,chatHall); // cannot add friends in Hall
-        frame.addHall(chatHall);
-        //chatHall.addUser(username);
-        chatHall.enterMessage(username);
 
     }
     public void sendName() throws IOException
@@ -148,25 +148,7 @@ public class Client implements Runnable{
         {   
             o.writeUTF("haha");
         }*/
-        logWindow.setVisible(false);
-        settingWindow.setVisible(false);
-        chatHall.setVisible(false);
-        System.out.print("false");
-        logWindow = new LogWindow(frame);
-        logWindow.setLocationRelativeTo(frame);
-        logWindow.setVisible(false);
-        settingWindow = new SettingWindow(frame);
-        settingWindow.setLocationRelativeTo(frame);
-        settingWindow.setVisible(false);
-        serverIP = "140.112.18.222";
-        port = 5566;
-        isLoggedIn=false;
-        isConnected=false; 
-        roomMap = new HashMap();
-        roomList = new ArrayList();
-        roomCount = 0;
-        userList = new Vector<String>();
-        
+        JOptionPane.showMessageDialog(frame, "Please Log in again." ,"Connection Error", JOptionPane.ERROR_MESSAGE);
     }
     public void send(String msg)
     {
@@ -386,10 +368,10 @@ public class Client implements Runnable{
                 
             } catch (IOException ex) {
                 try {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+               //     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                     somethingWrong();
                 } catch (IOException ex1) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex1);
+               //     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex1);
                 }
             }
         }

@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 
-
-
 /**
  *
  * @author eecamp
