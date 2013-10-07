@@ -285,6 +285,8 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     public void updateUserList(Vector<String> updateList){
         userList=updateList;
         userListPanel.setListData(userList);
+        sendToCombo.removeAllItems();
+        sendToCombo.addItem("To All");
         for(int i = 0; i < userList.size();++i){
             if(!userList.get(i).equals(client.username))
                 sendToCombo.addItem(userList.get(i));
@@ -294,6 +296,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
    public void addUser(String user){
         userList.add(user);
         userListPanel.setListData(userList);
+        sendToCombo.removeAllItems();
         if(!user.equals(client.username) )
             sendToCombo.addItem(user);
     }
@@ -301,7 +304,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     public void deleteUser(String user){
         userList.remove(user);
         userListPanel.setListData(userList);
-        client.userList.remove(user);
+        //client.userList.remove(user);
         sendToCombo.removeItem(user);
     }
     
