@@ -24,7 +24,7 @@ public class Chatroom {
         _FrameObject = new ChatFrame();
         _FrameObject.setVisible(true);
         // TODO code application logic here
-        //System.out.println("asa");
+        System.out.println("asa");
         /*
         System.out.println("Please enter the server's ip:");
         InputStreamReader in = new InputStreamReader(System.in);

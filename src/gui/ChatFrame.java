@@ -169,7 +169,6 @@ public class ChatFrame extends javax.swing.JFrame {
     private void newRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoomActionPerformed
         // TODO add your handling code here:
         if(client.isLoggedIn){
-            client.roomCount++; 
             addRoom();
         }
         else{
@@ -216,6 +215,7 @@ public class ChatFrame extends javax.swing.JFrame {
     
     public void addRoom(){
         // test
+         client.roomCount++; 
         int roomNum = client.roomCount;
         ChatRoomPrivate newRoom = new ChatRoomPrivate(client);
         client.roomList.add(newRoom);
@@ -223,6 +223,9 @@ public class ChatFrame extends javax.swing.JFrame {
         roomTab.addTab("New Room", newRoom);
         System.out.println(client.roomMap.size());
         client.sendAddRoom(client.roomCount);
+    }
+    public void addRoomTab(ChatRoomPrivate room){
+        roomTab.addTab("New Room", room);
     }
     // leave room or being kicked out
     public void deleteRoom(){
