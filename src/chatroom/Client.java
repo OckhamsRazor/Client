@@ -64,7 +64,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.224";
+        serverIP = "140.112.18.222";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -102,6 +102,12 @@ public class Client implements Runnable{
             chatHall = new ChatRoomHall(this);
             thread=new Thread(this);               
             thread.start();
+             isLoggedIn = true;
+            roomList.add(chatHall);
+            roomMap.put(0,chatHall); // cannot add friends in Hall
+            frame.addHall(chatHall);
+            //chatHall.addUser(username);
+            chatHall.enterMessage(username);
             
         }
         catch (IOException ex)
@@ -109,12 +115,6 @@ public class Client implements Runnable{
             somethingWrong();
         }
         // should receive user list from server!!
-        isLoggedIn = true;
-        roomList.add(chatHall);
-        roomMap.put(0,chatHall); // cannot add friends in Hall
-        frame.addHall(chatHall);
-        //chatHall.addUser(username);
-        chatHall.enterMessage(username);
 
     }
     public void sendName() throws IOException
@@ -339,7 +339,6 @@ public class Client implements Runnable{
         c.roomKey=roomNum;
         roomMap.put(roomNum,c);
         frame.addRoomTab(c);
-        
     }
     
     private void parseMsg(String msg)
