@@ -252,6 +252,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
     {
         userList=updateList;
         userListPanel.setListData(userList);
+        sendToCombo.removeAllItems();
+        sendToCombo.addItem("To All");
         for(int i = 0; i < userList.size();++i){
             if(!userList.get(i).equals(client.username))
                 sendToCombo.addItem(userList.get(i));
