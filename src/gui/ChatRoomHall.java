@@ -163,7 +163,6 @@ public class ChatRoomHall extends javax.swing.JPanel {
                 }
             }
         }
-
     }//GEN-LAST:event_inputTextPaneKeyPressed
 
     private void inputTextPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextPaneKeyReleased
