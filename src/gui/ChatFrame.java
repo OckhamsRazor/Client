@@ -229,10 +229,9 @@ public class ChatFrame extends javax.swing.JFrame {
     }
     // leave room or being kicked out
     public void deleteRoom(){
-         int roomNum = client.roomCount;
+         ChatRoomPrivate c = (ChatRoomPrivate) roomTab.getSelectedComponent();
          roomTab.remove(roomTab.getSelectedIndex());
-         System.out.println(client.roomMap.size());
-         client.sendLeaveRoom(client.roomCount);
+         client.sendLeaveRoom(c.roomKey);
     }
     public void clearTabbedRoom(){
         // delete all rooms except Hall

@@ -155,16 +155,15 @@ public class ChatRoomHall extends javax.swing.JPanel {
             System.out.println(inputText);
             if(!inputText.equals("") ){
                 showMessage();
-                client.sendRoomMsg(0,inputText);
-            }            
+                if(!whisper){
+                    client.sendRoomMsg(roomKey,inputText);
+                }else{
+                    String receiver = (String)sendToCombo.getSelectedItem();
+                    client.sendWhisper(roomKey,receiver,inputText);
+                }
+            }
         }
-         if(!whisper){
-            client.sendRoomMsg(roomKey,inputText);
-        
-         }else{
-            String receiver = (String)sendToCombo.getSelectedItem();
-            client.sendWhisper(roomKey,receiver,inputText);
-        }
+
     }//GEN-LAST:event_inputTextPaneKeyPressed
 
     private void inputTextPaneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextPaneKeyReleased
