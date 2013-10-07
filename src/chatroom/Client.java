@@ -64,7 +64,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.224";
+        serverIP = "140.112.18.222";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
