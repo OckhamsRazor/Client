@@ -205,7 +205,12 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
        if(userList.contains(inviteList.getSelectedGuest())){
            JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
                    "Initation Error",JOptionPane.INFORMATION_MESSAGE);
-       }else{
+       }
+       else if(inviteList.getSelectedGuest().equals(""))
+       {
+           
+       }
+       else{
            
            client.sendInvitation(roomKey, inviteList.getSelectedGuest() , "");      
            inviteList.resetGuest();
