@@ -176,7 +176,13 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
             if(!inputText.equals("") ){
                 showMessage();
             }
+            if(!whisper)
             client.sendRoomMsg(roomKey,inputText);
+            else
+            {
+                String receiver = (String)sendToCombo.getSelectedItem();
+                client.sendWhisper(roomKey,receiver,inputText);
+            }
         }
     }//GEN-LAST:event_inputTextPaneKeyPressed
 

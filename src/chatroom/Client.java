@@ -202,7 +202,7 @@ public class Client implements Runnable{
         send("INVITE\000"+username+"\000"+Integer.toString(roomNumber)+"\000"+receiver+"\000"+msg);
     }
     
-    private void sendWhisper(int roomNumber, String receiver, String msg)
+    public void sendWhisper(int roomNumber, String receiver, String msg)
     {
         send("MSG_P\000"+username+"\000"+Integer.toString(roomNumber)+"\000"+receiver+"\000"+msg);
     }
