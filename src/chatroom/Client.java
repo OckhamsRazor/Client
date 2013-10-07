@@ -317,16 +317,30 @@ public class Client implements Runnable{
     {
         Vector<String> tmp=new Vector<String>();
         System.out.print(length);
-        for(int i=3;i<length;i=i+1)
+        int i=0;
+        while(true)
         {
-            if(userlist[i]==username)
-                continue;
-            tmp.add(userlist[i]);
+            if(i==length)
+                break;
+            System.out.println(userlist[i*2+3]);
+            tmp.add(userlist[i*2+3]);
+            i=i+1;
         }
-
+        System.out.println("hahaha");
         ChatRoomPrivate c = (ChatRoomPrivate) roomMap.get(Integer.parseInt(userlist[1])); 
         c.updateUserList(tmp);
         //chatHall.displayUserList(tmp);
+    }
+    
+    public void rvInvitation(int roomNum)
+    {
+        roomCount++; 
+        ChatRoomPrivate c = new ChatRoomPrivate(this);
+        roomList.add(c);
+        c.roomKey=roomNum;
+        roomMap.put(roomNum,c);
+        frame.addRoomTab(c);
+        
     }
     
     private void parseMsg(String msg)
@@ -360,13 +374,16 @@ public class Client implements Runnable{
                 rvWhisper(message[1],Integer.parseInt(message[2]),message[3]);
                 break;
             case("\001USERLIST"):
-                int length=message.length;
-                System.out.print(msg);
+                //int length=message.length;
+                //System.out.print(msg);
                 rvUserList(message,Integer.parseInt(message[1]));
                 break;
             case("\001RM_USERLIST"):
-                int length2=message.length;
-                rvRoomUserList(message,length2);
+                //int length2=message.length;
+                rvRoomUserList(message,Integer.parseInt(message[2]));
+                break;
+            case("\001IN"):
+                rvInvitation(Integer.parseInt(message[1]));
                 break;
             default:
                 break;
