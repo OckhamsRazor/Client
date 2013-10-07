@@ -247,7 +247,6 @@ public class Client implements Runnable{
     {
         if(user==username)
             return;
-        System.out.println("adddddddd");
         userList.add(user);
         chatHall.updateUserList(userList);
         chatHall.enterMessage(user);
@@ -255,8 +254,8 @@ public class Client implements Runnable{
     
     private void rvLeaveHallUser(String user)
     {
-        chatHall.deleteUser(user);
         userList.remove(user);
+        chatHall.updateUserList(userList);
         chatHall.leaveMessage(user);
     }
     
