@@ -13,9 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import gui.*;
+import java.awt.FileDialog;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
@@ -81,8 +84,6 @@ public class Client implements Runnable{
         roomCount = 0;
         userList = new Vector<String>();
         // file transmission
-        _fileSend = new FileSend();
-        _fileRecv = new FileRecv();
         fileReceiver = new String("");
     }
   
@@ -115,21 +116,11 @@ public class Client implements Runnable{
             chatHall = new ChatRoomHall(this);
             thread=new Thread(this);               
             thread.start();
-<<<<<<< HEAD
-             isLoggedIn = true;
-            roomList.add(chatHall);
-            roomMap.put(0,chatHall); // cannot add friends in Hall
-            frame.addHall(chatHall);
-            //chatHall.addUser(username);
-            chatHall.enterMessage(username);
-            
-=======
             isLoggedIn = true;
             roomList.add(chatHall);
             roomMap.put(0,chatHall); // cannot add friends in Hall
             frame.addHall(chatHall);
             chatHall.enterMessage(username);
->>>>>>> 23090128865e9f63edcbb7495a330613e91453d1
         }
         catch (IOException ex)
         {
@@ -222,6 +213,9 @@ public class Client implements Runnable{
     
     // emit send file request for other client to server 
     public void sendFileSendReq(String target){
+        JFileChooser openFile = new JFileChooser();
+        openFile.showOpenDialog(frame);
+        File fs = openFile.getSelectedFile();
         send("");
     }
     
@@ -359,23 +353,27 @@ public class Client implements Runnable{
     }
     
     // not sure protocol yet
-    public void rvFileSendReqest(String sender){ // default port
+    public void rvFileSendReqest(String sender, String filename){ // default port
         boolean readyToRecv;
-        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you. "
+        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send" + filename + "to you. "
                                     ,"A file request",JOptionPane.YES_NO_OPTION);
         
         if(option == JOptionPane.YES_OPTION){
             // send protocol
-            send("");
+            FileDialog recvFileDialog = new FileDialog(frame, "Save to ...");
+            Thread fsThread = new Thread (new FileRecv(filename, recvFileDialog.getDirectory()));
+            fsThread.start();
+            sendFileRecvReply(true);
         } else {
             // sedn protocol
-            send("");
+            sendFileRecvReply(false);
         }
     }
     public void rvFileRecvReply(String ip, boolean readyToRecv){
         if(readyToRecv){
             // open new socket send file
-          //  _fileSend.send();
+            Thread fsThread = new Thread(new FileSend());
+            fsThread.start();
         }else{
             JOptionPane.showMessageDialog(frame,fileReceiver+" reuse to receive file.","Send fail.", JOptionPane.INFORMATION_MESSAGE);
             fileReceiver = "";

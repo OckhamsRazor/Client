@@ -24,7 +24,7 @@ public class ChatFrame extends javax.swing.JFrame {
      * Creates new form ChatFrame
      */
     private Client client;
-    private FileDialog sendFileDialog; 
+     
     
     // client info is accessible
     public ChatFrame() {
@@ -216,8 +216,6 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
         sendTargetWindow.setVisible(true);
-        sendFileDialog = new FileDialog(this, "Choose a file");
-        sendFileDialog.setVisible(true);
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
     }//GEN-LAST:event_sendFileActionPerformed
 

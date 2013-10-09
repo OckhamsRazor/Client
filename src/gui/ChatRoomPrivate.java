@@ -182,7 +182,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
                     client.sendWhisper(roomKey,receiver,inputText);
                 }
             }
-            client.sendRoomMsg(roomKey, inputText);
+
         }
     }//GEN-LAST:event_inputTextPaneKeyPressed
 
