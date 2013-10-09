@@ -148,7 +148,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
             whisper = false;
         }
         // for test
-        if(evt.getKeyChar( )== '\n'&& client.isLoggedIn){
+        if(evt.getKeyChar( )== '\n'&& client.getLogState()){
           //  client.send(parseInputText(inputTextPane.getText()));
             inputText = inputTextPane.getText();
             refreshInputPane();

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,7 +29,6 @@ public class Client implements Runnable{
     private ChatFrame frame;
     public ChatRoomHall chatHall;
     public ChatFrame getFrame(){return frame;} 
-    
    
     // room information 
     public ArrayList roomList;
@@ -51,8 +51,16 @@ public class Client implements Runnable{
     private Thread thread;
     
     // log & connection state
-    public boolean isLoggedIn;
+    private boolean isLoggedIn;
     private boolean isConnected;
+    public void setLogState(boolean b){ isLoggedIn = b;}
+    public boolean getLogState(){return isLoggedIn;}
+    
+    // file transmission
+    private FileSend _fileSend;
+    private FileRecv _fileRecv;
+    private String fileReceiver;
+    
     
     
     public Client(ChatFrame f)
@@ -72,6 +80,10 @@ public class Client implements Runnable{
         roomList = new ArrayList();
         roomCount = 0;
         userList = new Vector<String>();
+        // file transmission
+        _fileSend = new FileSend();
+        _fileRecv = new FileRecv();
+        fileReceiver = new String("");
     }
   
     public void setServer(){
@@ -217,6 +229,23 @@ public class Client implements Runnable{
         send("STAT\000"+username+"\000"+status);
     }
     
+    // emit send file request for other client to server 
+    public void sendFileSendReq(String target){
+        send("");
+    }
+    
+    // receiver client
+    public void sendFileRecvReply(boolean readyToRecv){
+        //send protocol to server
+        if(readyToRecv){
+            // send protocol
+            send("");
+        }else{
+            // send protocol
+            send("");
+        }
+    }
+    
     public void sendLogOut()
     {
         send("LOGOUT");
@@ -304,12 +333,9 @@ public class Client implements Runnable{
             tmp.add(userlist[i*2+2]);
             i=i+1;
         }
-        //System.out.print("hahahah1");
         userList=tmp;
-        //System.out.print("hahahah2");
         chatHall.updateUserList(tmp);
-        //System.out.print("hahahah3");
-        //chatHall.displayUserList(userList);
+
     }
     
     public void rvRoomUserList(String[] userlist, int length)
@@ -341,6 +367,29 @@ public class Client implements Runnable{
         frame.addRoomTab(c);
     }
     
+    // not sure protocol yet
+    public void rvFileSendReqest(String sender){ // default port
+        boolean readyToRecv;
+        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you. "
+                                    ,"A file request",JOptionPane.YES_NO_OPTION);
+        
+        if(option == JOptionPane.YES_OPTION){
+            // send protocol
+            send("");
+        } else {
+            // sedn protocol
+            send("");
+        }
+    }
+    public void rvFileRecvReply(String ip, boolean readyToRecv){
+        if(readyToRecv){
+            // open new socket send file
+          //  _fileSend.send();
+        }else{
+            JOptionPane.showMessageDialog(frame,fileReceiver+" reuse to receive file.","Send fail.", JOptionPane.INFORMATION_MESSAGE);
+            fileReceiver = "";
+        }
+    }
     private void parseMsg(String msg)
     {
         String[] message=msg.split("\000");
@@ -394,7 +443,6 @@ public class Client implements Runnable{
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         while(true)
         {
-            
             try {
                 String msg=i.readUTF();
                 System.out.println(msg+" msg");
