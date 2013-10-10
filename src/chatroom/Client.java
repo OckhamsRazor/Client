@@ -456,6 +456,14 @@ public class Client implements Runnable{
             case("\000FS_REP_N"):
                 System.out.println("c");
                 rvFileRecvReply(message[1]);
+				break;
+            case("\001ERROR"):
+                JOptionPane.showMessageDialog(
+                    null,
+                    message[1],
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
                 break;
             default:
                 break;
