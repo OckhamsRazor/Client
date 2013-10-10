@@ -12,10 +12,17 @@ import gui.*;
  * @author Simon
  */
 public class FileSend implements Runnable{
+    
+    private String recvIP;
+    private File fs;
+    
+    public FileSend(String IP, File f){
+        recvIP = IP;
+        fs = f;
+    }
 
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
-    
 }

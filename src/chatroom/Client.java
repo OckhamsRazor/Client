@@ -17,6 +17,7 @@ import java.awt.FileDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
@@ -60,10 +61,7 @@ public class Client implements Runnable{
     public boolean getLogState(){return isLoggedIn;}
     
     // file transmission
-    private FileSend _fileSend;
-    private FileRecv _fileRecv;
-    private String fileReceiver;
-    
+    private HashMap recvFileMap;
     
     
     public Client(ChatFrame f)
@@ -75,7 +73,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.222";
+        serverIP = "140.112.18.224";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -84,7 +82,7 @@ public class Client implements Runnable{
         roomCount = 0;
         userList = new Vector<String>();
         // file transmission
-        fileReceiver = new String("");
+        recvFileMap = new HashMap<String,File>();
     }
   
     public void setServer(){
@@ -96,6 +94,7 @@ public class Client implements Runnable{
     public void connectServer() throws IOException
     {
         logWindow.setVisible(true);
+        if(!logWindow.continueToConnect) return;
         
         username = logWindow.username;
         password = logWindow.password; 
@@ -213,21 +212,46 @@ public class Client implements Runnable{
     
     // emit send file request for other client to server 
     public void sendFileSendReq(String target){
-        JFileChooser openFile = new JFileChooser();
-        openFile.showOpenDialog(frame);
-        File fs = openFile.getSelectedFile();
-        send("");
+        // check if in sendlist
+        if(recvFileMap.containsKey(target)){
+            int c = JOptionPane.showConfirmDialog(frame, "One file request is sent to " + target 
+                                                        + ".\nDo you want to send new request?",
+                                                        "",
+                                                        JOptionPane.YES_NO_OPTION);
+            if(c==JOptionPane.YES_OPTION){
+                JFileChooser openFile = new JFileChooser();
+                openFile.showOpenDialog(frame);
+                File fs = openFile.getSelectedFile();
+                String filename = fs.getAbsolutePath();
+                int filesize = (int)fs.length();
+                recvFileMap.remove(target);
+                recvFileMap.put(target, fs);
+                send("FS_REQ\000"+username+"\000"+target+"\000"+filename+"\000"+filesize+"\000");
+               
+            }else{
+                // do nothong
+            }
+        }
+        else{
+            JFileChooser openFile = new JFileChooser();
+            openFile.showOpenDialog(frame);
+            File fs = openFile.getSelectedFile();
+            String filename = fs.getAbsolutePath();
+            int filesize = (int)fs.length();
+            recvFileMap.put(target,fs);
+            send("FS_REQ\000"+username+"\000"+target+"\000"+filename+"\000"+filesize+"\000");
+        }
     }
     
     // receiver client
-    public void sendFileRecvReply(boolean readyToRecv){
+    public void sendFileRecvReply(boolean readyToRecv, String sender){
         //send protocol to server
         if(readyToRecv){
             // send protocol
-            send("");
+            send("FS_REP_Y\000"+username+"\000"+sender+"\000"+socket.getLocalAddress()+"\000");
         }else{
             // send protocol
-            send("");
+            send("FS_REP_N\000"+username+"\000"+sender+"\000");
         }
     }
     
@@ -320,7 +344,6 @@ public class Client implements Runnable{
         }
         userList=tmp;
         chatHall.updateUserList(tmp);
-
     }
     
     public void rvRoomUserList(String[] userlist, int length)
@@ -353,31 +376,32 @@ public class Client implements Runnable{
     }
     
     // not sure protocol yet
-    public void rvFileSendReqest(String sender, String filename){ // default port
-        boolean readyToRecv;
-        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send" + filename + "to you. "
-                                    ,"A file request",JOptionPane.YES_NO_OPTION);
-        
+    public void rvFileSendReq(String sender, String filename, String filesize){ // default port
+        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you.\n"
+                                                        + "File Name: " + filename +'\n'
+                                                        + "File Size: " + filesize
+                                                ,"file request",JOptionPane.YES_NO_OPTION);
         if(option == JOptionPane.YES_OPTION){
             // send protocol
             FileDialog recvFileDialog = new FileDialog(frame, "Save to ...");
             Thread fsThread = new Thread (new FileRecv(filename, recvFileDialog.getDirectory()));
             fsThread.start();
-            sendFileRecvReply(true);
+            sendFileRecvReply(true,sender);
         } else {
             // sedn protocol
-            sendFileRecvReply(false);
+            sendFileRecvReply(false,sender);
         }
     }
-    public void rvFileRecvReply(String ip, boolean readyToRecv){
-        if(readyToRecv){
-            // open new socket send file
-            Thread fsThread = new Thread(new FileSend());
-            fsThread.start();
-        }else{
-            JOptionPane.showMessageDialog(frame,fileReceiver+" reuse to receive file.","Send fail.", JOptionPane.INFORMATION_MESSAGE);
-            fileReceiver = "";
-        }
+    
+    public void rvFileRecvReply(String receiver, String recvIP){
+        File fs = (File)recvFileMap.get(receiver);
+        recvFileMap.remove(receiver);
+        Thread fsThread = new Thread(new FileSend(recvIP,fs));
+        fsThread.start();
+    }
+    public void rvFileRecvReply(String receiver){
+        JOptionPane.showMessageDialog(frame,receiver + " reuse to receive file.","Send fail.", JOptionPane.INFORMATION_MESSAGE);
+        recvFileMap.remove(receiver);
     }
     private void parseMsg(String msg)
     {
@@ -420,6 +444,18 @@ public class Client implements Runnable{
                 break;
             case("\001IN"):
                 rvInvitation(Integer.parseInt(message[1]));
+                break;
+            case("\000FS_REQ"):
+                System.out.println("a");
+                rvFileSendReq(message[1],message[3],message[4]);
+                break;
+            case("\000FS_REP_Y"):
+                System.out.println("b");
+                rvFileRecvReply(message[1],message[2]); // receiver/IP
+                break;
+            case("\000FS_REP_N"):
+                System.out.println("c");
+                rvFileRecvReply(message[1]);
                 break;
             default:
                 break;

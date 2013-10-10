@@ -20,6 +20,7 @@ public class GuestListWindow extends javax.swing.JDialog {
     private String guest;
     public String getSelectedGuest(){return guest;}
     public void resetGuest(){ guest = ""; }
+    public boolean continueToSend;
     
     public GuestListWindow(java.awt.Frame parent, String title) {
         super(parent, true);
@@ -123,12 +124,18 @@ public class GuestListWindow extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         guest = (String) inviteList.getSelectedValue();
+        if(guest == null){
+            continueToSend = false;
+        }else{
+            continueToSend = true;
+        }
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         guest = "";
+        continueToSend = false;
         setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 

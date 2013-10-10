@@ -216,6 +216,7 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
         sendTargetWindow.setVisible(true);
+        if(!sendTargetWindow.continueToSend) return;
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
     }//GEN-LAST:event_sendFileActionPerformed
 
