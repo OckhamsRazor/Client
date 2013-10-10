@@ -28,7 +28,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     private String dialogText;
     public int roomKey;
     private boolean whisper;
-    private InviteListWindow inviteList;
+    private GuestListWindow inviteList;
 
     // guestList elements;
     private Vector<String> userList;    // all users who connect to server
@@ -42,7 +42,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         dialogText = new String();              // empty string
         userList = new Vector<String>();        // get list form server!!    
         userListPanel.setListData(userList);
-        inviteList = new InviteListWindow(client.getFrame());
+        inviteList = new GuestListWindow(client.getFrame(), "Select Guest");
         inviteList.setLocationRelativeTo(client.getFrame());
         inviteList.setVisible(false);
         roomKey = -1;
@@ -161,7 +161,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
 
     private void inputTextPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextPaneKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyChar( )== '\n'&& client.isLoggedIn){
+        if(evt.getKeyChar( )== '\n'&& client.getLogState()){
             String s = (String) sendToCombo.getSelectedItem() ;
             if(!s.equals("To All") ){ 
                 whisper = true;
@@ -182,6 +182,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
                     client.sendWhisper(roomKey,receiver,inputText);
                 }
             }
+
         }
     }//GEN-LAST:event_inputTextPaneKeyPressed
 

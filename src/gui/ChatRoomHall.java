@@ -148,7 +148,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
             whisper = false;
         }
         // for test
-        if(evt.getKeyChar( )== '\n'&& client.isLoggedIn){
+        if(evt.getKeyChar( )== '\n'&& client.getLogState()){
           //  client.send(parseInputText(inputTextPane.getText()));
             inputText = inputTextPane.getText();
             refreshInputPane();
@@ -179,6 +179,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
 
     private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
         // TODO add your handling code here:
+        inputTextPane.setCaretPosition(inputDoc.getLength());
         inputTextPane.insertIcon(new ImageIcon("cry.png"));
         System.out.println("QQ");
     }//GEN-LAST:event_cryButtonActionPerformed

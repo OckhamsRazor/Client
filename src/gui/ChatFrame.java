@@ -6,13 +6,12 @@ package gui;
 
 import chatroom.*;
 import java.awt.Component;
+import java.awt.FileDialog;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-
-
 
 
 /**
@@ -25,13 +24,13 @@ public class ChatFrame extends javax.swing.JFrame {
      * Creates new form ChatFrame
      */
     private Client client;
-    // user info is accessible
-
+     
     
+    // client info is accessible
     public ChatFrame() {
         initComponents();
         client = new Client(this);
-        client.isLoggedIn = false;
+        client.setLogState(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,7 +54,7 @@ public class ChatFrame extends javax.swing.JFrame {
         leaveRoom = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         saveConv = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        sendFile = new javax.swing.JMenuItem();
 
         jMenu2.setText("jMenu2");
 
@@ -130,9 +129,14 @@ public class ChatFrame extends javax.swing.JFrame {
         });
         jMenu5.add(saveConv);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
-        jMenuItem2.setText("Send file to...");
-        jMenu5.add(jMenuItem2);
+        sendFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
+        sendFile.setText("Send file to...");
+        sendFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendFileActionPerformed(evt);
+            }
+        });
+        jMenu5.add(sendFile);
 
         jMenuBar1.add(jMenu5);
 
@@ -154,7 +158,7 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
-        if(!client.isLoggedIn){
+        if(!client.getLogState()){
             try {
                 client.connectServer();
             } catch (IOException ex) {
@@ -168,7 +172,7 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void newRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoomActionPerformed
         // TODO add your handling code here:
-        if(client.isLoggedIn){
+        if(client.getLogState()){
             addRoom();
         }
         else{
@@ -191,7 +195,7 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         // TODO add your handling code here:
-        if(client.isLoggedIn){
+        if(client.getLogState()){
             client.sendLogOut();
         }else{
             JOptionPane.showMessageDialog(this, "You haven't logged in !!", "Log Message", JOptionPane.INFORMATION_MESSAGE);
@@ -207,6 +211,14 @@ public class ChatFrame extends javax.swing.JFrame {
             // show list
         }
     }//GEN-LAST:event_saveConvActionPerformed
+
+    private void sendFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileActionPerformed
+        // TODO add your handling code here:
+        GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
+        sendTargetWindow.setVisible(true);
+        if(!sendTargetWindow.continueToSend) return;
+        client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
+    }//GEN-LAST:event_sendFileActionPerformed
 
     // should log in first!!
     public void addHall(ChatRoomHall hall){
@@ -246,13 +258,13 @@ public class ChatFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem leaveRoom;
     private javax.swing.JMenuItem logIn;
     private javax.swing.JMenuItem logOut;
     private javax.swing.JMenuItem newRoom;
     private javax.swing.JTabbedPane roomTab;
     private javax.swing.JMenuItem saveConv;
+    private javax.swing.JMenuItem sendFile;
     private javax.swing.JMenuItem setServer;
     // End of variables declaration//GEN-END:variables
 }

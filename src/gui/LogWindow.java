@@ -20,12 +20,12 @@ public class LogWindow extends javax.swing.JDialog {
     public int port;
     public String username;
     public String password;
+    public boolean continueToConnect;
     
     
     public LogWindow(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
-     
     }
 
     /**
@@ -140,6 +140,7 @@ public class LogWindow extends javax.swing.JDialog {
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         // TODO add your handling code here:
+        continueToConnect = false;
         setVisible(false);
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -221,6 +222,7 @@ public class LogWindow extends javax.swing.JDialog {
         }
         else{
             username = usernameText.getText();
+            continueToConnect = true;
             setVisible(false);  // hide dialog and wait for connection
                 }
     }

@@ -11,19 +11,21 @@ import javax.swing.JList;
  *
  * @author eecamp
  */
-public class InviteListWindow extends javax.swing.JDialog {
+public class GuestListWindow extends javax.swing.JDialog {
 
     
     /**
-     * Creates new form InviteListWindow
+     * Creates new form GuestListWindow
      */
     private String guest;
     public String getSelectedGuest(){return guest;}
     public void resetGuest(){ guest = ""; }
+    public boolean continueToSend;
     
-    public InviteListWindow(java.awt.Frame parent) {
+    public GuestListWindow(java.awt.Frame parent, String title) {
         super(parent, true);
         initComponents();
+        setTitle(title);
         guest = new String("");
     }
     public void setList(Vector<String> s){
@@ -122,12 +124,18 @@ public class InviteListWindow extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         guest = (String) inviteList.getSelectedValue();
+        if(guest == null){
+            continueToSend = false;
+        }else{
+            continueToSend = true;
+        }
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         guest = "";
+        continueToSend = false;
         setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -167,13 +175,13 @@ public class InviteListWindow extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InviteListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuestListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InviteListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuestListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InviteListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuestListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InviteListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuestListWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -183,7 +191,7 @@ public class InviteListWindow extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                InviteListWindow dialog = new InviteListWindow(new javax.swing.JFrame());
+                GuestListWindow dialog = new GuestListWindow(new javax.swing.JFrame(), new String());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
                     @Override
