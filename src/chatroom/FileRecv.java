@@ -50,16 +50,16 @@ public class FileRecv implements Runnable{
             
 
             if(is.readUTF().equals("/r")){
-//                bytesRead = is.read( bufferArray, 0, filesize );
+
                 System.out.println("BEGIN");                
                 do {
-                        bytesRead = is.read(bufferArray, current, (bufferArray.length-current));
-                        if(bytesRead>0)
-                            current += bytesRead;
-                        //System.out.print( "current total=" + current + " bytes, ");
-                       // System.out.println(current);
-                        System.out.println(current);
-                        System.out.println(filesize);
+                        
+                    bytesRead = is.read(bufferArray, current, (bufferArray.length-current));
+                    if(bytesRead>0){
+                        current += bytesRead;
+                    }
+                    System.out.println(current);
+                    System.out.println(filesize);
                 }while(current < filesize );
                 bos.write(bufferArray, 0, current);
                 bos.flush();
@@ -68,7 +68,7 @@ public class FileRecv implements Runnable{
                 server.close();
                 System.out.println("SAVE DONE");
             }
-            System.out.println("hahaha");
+
             recvSocket.close();
             server.close();
         }catch(IOException e){

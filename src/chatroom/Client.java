@@ -255,8 +255,15 @@ public class Client implements Runnable{
         }
     }
     
-    public void sendLogOut()
+    public void logOut()
     {
+        // user info initialization
+        roomMap.remove(0);
+        roomMap = new HashMap();
+        roomList = new ArrayList();
+        roomCount = 0;
+        username = "";
+        isLoggedIn = false;
         send("LOGOUT");
     }
     
