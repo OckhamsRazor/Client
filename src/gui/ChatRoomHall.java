@@ -264,7 +264,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
         userList=userlist;
         userListPanel.setListData(userList);
     }
-    // no room deletion in hall
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cryButton;

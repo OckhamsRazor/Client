@@ -55,6 +55,8 @@ public class ChatFrame extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         saveConv = new javax.swing.JMenuItem();
         sendFile = new javax.swing.JMenuItem();
+        audio = new javax.swing.JMenuItem();
+        video = new javax.swing.JMenuItem();
 
         jMenu2.setText("jMenu2");
 
@@ -138,6 +140,24 @@ public class ChatFrame extends javax.swing.JFrame {
         });
         jMenu5.add(sendFile);
 
+        audio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
+        audio.setText("Audio stream");
+        audio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                audioActionPerformed(evt);
+            }
+        });
+        jMenu5.add(audio);
+
+        video.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
+        video.setText("Video stream");
+        video.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                videoActionPerformed(evt);
+            }
+        });
+        jMenu5.add(video);
+
         jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
@@ -196,9 +216,10 @@ public class ChatFrame extends javax.swing.JFrame {
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         // TODO add your handling code here:
         if(client.getLogState()){
-            client.sendLogOut();
+            roomTab.remove(0);  
+            client.logOut();
         }else{
-            JOptionPane.showMessageDialog(this, "You haven't logged in !!", "Log Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You haven't logged in yet!!", "Log Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_logOutActionPerformed
 
@@ -214,7 +235,7 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void sendFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileActionPerformed
         // TODO add your handling code here:
-       
+       if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
         sendTargetWindow.setList(client.userList);
         sendTargetWindow.setVisible(true);
@@ -223,6 +244,15 @@ public class ChatFrame extends javax.swing.JFrame {
        
      //   client.sendFileSendReq(client.username);
     }//GEN-LAST:event_sendFileActionPerformed
+
+    private void audioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_audioActionPerformed
+
+    private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
+        // TODO add your handling code here:
+        // gui fuction
+    }//GEN-LAST:event_videoActionPerformed
 
     // should log in first!!
     public void addHall(ChatRoomHall hall){
@@ -256,6 +286,7 @@ public class ChatFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem audio;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -270,5 +301,6 @@ public class ChatFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveConv;
     private javax.swing.JMenuItem sendFile;
     private javax.swing.JMenuItem setServer;
+    private javax.swing.JMenuItem video;
     // End of variables declaration//GEN-END:variables
 }

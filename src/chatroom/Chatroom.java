@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import gui.ChatFrame;
+import sound.Sound;
 
 /**
  *
@@ -24,7 +25,9 @@ public class Chatroom {
         _FrameObject = new ChatFrame();
         _FrameObject.setVisible(true);
         // TODO code application logic here
-        System.out.println("asa");
+/*        Sound sound1=new Sound();
+        sound1.connect1(5555);
+        sound1.connect3("140.112.18.223",5566);*/
         /*
         System.out.println("Please enter the server's ip:");
         InputStreamReader in = new InputStreamReader(System.in);
