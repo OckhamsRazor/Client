@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="6">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="13">
         <file>
             <url>src/chatroom/Client.java</url>
-            <bookmark id="6">
+            <bookmark id="8">
                 <name/>
-                <line>214</line>
+                <line>83</line>
                 <key/>
             </bookmark>
-            <bookmark id="4">
+            <bookmark id="6">
                 <name/>
-                <line>367</line>
+                <line>213</line>
+                <key/>
+            </bookmark>
+            <bookmark id="11">
+                <name/>
+                <line>246</line>
+                <key/>
+            </bookmark>
+            <bookmark id="12">
+                <name/>
+                <line>378</line>
+                <key/>
+            </bookmark>
+            <bookmark id="13">
+                <name/>
+                <line>400</line>
+                <key/>
+            </bookmark>
+            <bookmark id="7">
+                <name/>
+                <line>459</line>
                 <key/>
             </bookmark>
         </file>

@@ -222,7 +222,7 @@ public class Client implements Runnable{
                 JFileChooser openFile = new JFileChooser();
                 openFile.showOpenDialog(frame);
                 File fs = openFile.getSelectedFile();
-                String filename = fs.getAbsolutePath();
+                String filename = fs.getName();
                 int filesize = (int)fs.length();
                 recvFileMap.remove(target);
                 recvFileMap.put(target, fs);
@@ -236,7 +236,7 @@ public class Client implements Runnable{
             JFileChooser openFile = new JFileChooser();
             openFile.showOpenDialog(frame);
             File fs = openFile.getSelectedFile();
-            String filename = fs.getAbsolutePath();
+            String filename = fs.getName();
             int filesize = (int)fs.length();
             recvFileMap.put(target,fs);
             send("FS_REQ\000"+username+"\000"+target+"\000"+filename+"\000"+filesize+"\000");
@@ -377,23 +377,29 @@ public class Client implements Runnable{
     
     // not sure protocol yet
     public void rvFileSendReq(String sender, String filename, String filesize){ // default port
-        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you.\n"
+       int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you.\n"
                                                         + "File Name: " + filename +'\n'
                                                         + "File Size: " + filesize
                                                 ,"file request",JOptionPane.YES_NO_OPTION);
         if(option == JOptionPane.YES_OPTION){
-            // send protocol
-            FileDialog recvFileDialog = new FileDialog(frame, "Save to ...");
-            Thread fsThread = new Thread (new FileRecv(filename, recvFileDialog.getDirectory()));
-            fsThread.start();
-            sendFileRecvReply(true,sender);
+            JFileChooser recvFileDialog = new JFileChooser();
+            int result = recvFileDialog.showSaveDialog(frame);
+            if( result == JFileChooser.APPROVE_OPTION){
+                File file = recvFileDialog.getSelectedFile();
+                Thread fsThread = new Thread (new FileRecv(file,Integer.parseInt(filesize)));
+                fsThread.start();
+                sendFileRecvReply(true,sender);
+            }else{
+                
+            }
+           
         } else {
-            // sedn protocol
             sendFileRecvReply(false,sender);
         }
     }
     
     public void rvFileRecvReply(String receiver, String recvIP){
+        System.out.println(receiver + " &&" + recvIP );
         File fs = (File)recvFileMap.get(receiver);
         recvFileMap.remove(receiver);
         Thread fsThread = new Thread(new FileSend(recvIP,fs));
@@ -445,15 +451,15 @@ public class Client implements Runnable{
             case("\001IN"):
                 rvInvitation(Integer.parseInt(message[1]));
                 break;
-            case("\000FS_REQ"):
+            case("\001FS_REQ"):
                 System.out.println("a");
-                rvFileSendReq(message[1],message[3],message[4]);
+                rvFileSendReq(message[1],message[2],message[3]);
                 break;
-            case("\000FS_REP_Y"):
+            case("\001FS_REP_Y"):
                 System.out.println("b");
                 rvFileRecvReply(message[1],message[2]); // receiver/IP
                 break;
-            case("\000FS_REP_N"):
+            case("\001FS_REP_N"):
                 System.out.println("c");
                 rvFileRecvReply(message[1]);
 				break;
