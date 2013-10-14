@@ -214,13 +214,14 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void sendFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileActionPerformed
         // TODO add your handling code here:
-        /*
+       
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
+        sendTargetWindow.setList(client.userList);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
-        */
-        client.sendFileSendReq(client.username);
+       
+     //   client.sendFileSendReq(client.username);
     }//GEN-LAST:event_sendFileActionPerformed
 
     // should log in first!!
