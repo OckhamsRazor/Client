@@ -41,7 +41,7 @@ public class tranSound implements Runnable{
         } catch (Exception ex) {
             Logger.getLogger(tranSound.class.getName()).log(Level.SEVERE, null, ex);
         }
-        thread=new Thread();
+        thread=new Thread(this);
         thread.start();
     }
     @Override

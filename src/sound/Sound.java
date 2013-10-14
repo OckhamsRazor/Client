@@ -30,7 +30,7 @@ public class Sound {
     {
         try {
             serve=new ServerSocket(p);
-            System.out.println("asa0");
+            //System.out.println("asa0");
             inSocket=serve.accept();
             
             receive=new revSound(inSocket);
@@ -44,7 +44,7 @@ public class Sound {
     {
         try {
             outSocket= new Socket(InetAddress.getByName(ip), p_partner);
-            System.out.println("asa1");
+            //System.out.println("asa1");
             transfer=new tranSound(outSocket);
             transfer.connecting();
             serve=new ServerSocket(p_me);

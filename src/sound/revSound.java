@@ -37,8 +37,10 @@ public class revSound implements Runnable{
         } catch (Exception ex) {
             Logger.getLogger(tranSound.class.getName()).log(Level.SEVERE, null, ex);
         }
-        thread=new Thread();
+        System.out.println("asa3");
+        thread=new Thread(this);
         thread.start();
+        //System.out.println("asa4");
     }
     @Override
     public void run() {

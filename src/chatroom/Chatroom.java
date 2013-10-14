@@ -28,12 +28,12 @@ public class Chatroom {
         System.out.println("asa");
         Sound sound1;
         sound1 = new Sound();
-        Sound sound2;
-        sound2 = new Sound();
+        //Sound sound2;
+        //sound2 = new Sound();
         int a=5566;
         sound1.connect1(a);
         int b=5565;
-        sound2.connect2("140.112.18.223", a, b);
+        //sound2.connect2("140.112.18.223", a, b);
         sound1.connect3("140.112.18.223", b);
         /*
         System.out.println("Please enter the server's ip:");
