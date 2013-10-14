@@ -42,6 +42,7 @@ public class revSound implements Runnable{
     }
     @Override
     public void run() {
+        System.out.println("asa2");
         byte[] data=new byte[1024];
         BufferedInputStream playbackInputStream = null;
         try {
@@ -71,5 +72,8 @@ public class revSound implements Runnable{
         }
         
     }
-    
+    public void stop()
+    {
+        thread=null;
+    }
 }

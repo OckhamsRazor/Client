@@ -33,7 +33,7 @@ public class tranSound implements Runnable{
         speak=new AudioCapture(AMAudioFormat.FORMAT_CODE_GSM);
         //format=AMAudioFormat.getLineAudioFormat(AMAudioFormat.FORMAT_CODE_GSM);
     }
-    private void connecting()
+    public void connecting()
     {
         try {
             speak.open();
@@ -46,6 +46,7 @@ public class tranSound implements Runnable{
     }
     @Override
     public void run() {
+        System.out.println("asa1");
         byte[] data=new byte[1024];
         BufferedOutputStream captureOutputStream = null;
         try {
@@ -75,8 +76,13 @@ public class tranSound implements Runnable{
         } catch (IOException ex) {
             Logger.getLogger(tranSound.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
 
         
+    }
+    public void stop()
+    {
+        thread=null;
     }
 
     

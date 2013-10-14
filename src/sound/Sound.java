@@ -22,7 +22,7 @@ public class Sound {
     private tranSound transfer;
     private revSound receive;
     
-    public Sound(int p)
+    public Sound()
     {
        
     }
@@ -30,7 +30,9 @@ public class Sound {
     {
         try {
             serve=new ServerSocket(p);
+            System.out.println("asa0");
             inSocket=serve.accept();
+            
             receive=new revSound(inSocket);
             receive.connecting();
         } catch (IOException ex) {
@@ -42,6 +44,7 @@ public class Sound {
     {
         try {
             outSocket= new Socket(InetAddress.getByName(ip), p_partner);
+            System.out.println("asa1");
             transfer=new tranSound(outSocket);
             transfer.connecting();
             serve=new ServerSocket(p_me);
@@ -64,7 +67,8 @@ public class Sound {
     }
     public void disconnect()
     {
-        
+        transfer.stop();
+        receive.stop();
     }
     
     
