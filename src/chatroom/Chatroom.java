@@ -25,9 +25,9 @@ public class Chatroom {
         _FrameObject = new ChatFrame();
         _FrameObject.setVisible(true);
         // TODO code application logic here
-/*        Sound sound1=new Sound();
-        sound1.connect1(5555);
-        sound1.connect3("140.112.18.223",5566);*/
+        //Sound sound1=new Sound();
+        //sound1.connect1(5555);
+        //sound1.connect2("140.112.18.222",5555,5566);
         /*
         System.out.println("Please enter the server's ip:");
         InputStreamReader in = new InputStreamReader(System.in);
