@@ -22,6 +22,7 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import sound.Sound;
 
 /**
  *
@@ -63,6 +64,8 @@ public class Client implements Runnable{
     // file transmission
     private HashMap recvFileMap;
     
+    public Sound sound;
+    
     
     public Client(ChatFrame f)
     {
@@ -73,7 +76,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.224";
+        serverIP = "140.112.18.222";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -255,6 +258,16 @@ public class Client implements Runnable{
         }
     }
     
+    public void sendSpeakInvite(String receiver, int sender_port)
+    {
+        
+    }
+    
+    public void sendSpeakAck(int sender_port)
+    {
+        
+    }
+    
     public void logOut()
     {
         // user info initialization
@@ -416,6 +429,14 @@ public class Client implements Runnable{
         JOptionPane.showMessageDialog(frame,receiver + " reuse to receive file.","Send fail.", JOptionPane.INFORMATION_MESSAGE);
         recvFileMap.remove(receiver);
     }
+    public void rvSpeak(String sender, String sender_ip, int sender_port)
+    {
+        
+    }
+    public void rvSpeakAck(String sender_ip, int sender_port)
+    {
+        
+    }
     private void parseMsg(String msg)
     {
         String[] message=msg.split("\000");
@@ -477,6 +498,12 @@ public class Client implements Runnable{
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 );
+                break;
+            case("\001SPEAK"):
+                rvSpeak(message[1],message[2],Integer.parseInt(message[3]));
+                break;
+            case("\001SPEAK_ACK"):
+                rvSpeakAck(message[1], Integer.parseInt(message[2]));
                 break;
             default:
                 break;
