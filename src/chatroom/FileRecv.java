@@ -50,8 +50,7 @@ public class FileRecv implements Runnable{
             
 
             if(is.readUTF().equals("/r")){
-
-                System.out.println("BEGIN");                
+                System.out.println("Send file begins");                
                 do {
                         
                     bytesRead = is.read(bufferArray, current, (bufferArray.length-current));
@@ -67,10 +66,10 @@ public class FileRecv implements Runnable{
                 recvSocket.close();
                 server.close();
                 System.out.println("SAVE DONE");
+            }else{
+                recvSocket.close();
+                server.close();
             }
-
-            recvSocket.close();
-            server.close();
         }catch(IOException e){
              System.out.println(e.toString());
         }

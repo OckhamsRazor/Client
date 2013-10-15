@@ -258,7 +258,7 @@ public class Client implements Runnable{
         }
     }
     
-    public void sendSpeakInvite(String receiver, int sender_port)
+    public void sendSpeakInvite(String receiver)
     {
         
     }
