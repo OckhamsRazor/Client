@@ -43,6 +43,8 @@ public class LogWindow extends javax.swing.JDialog {
         exitButton = new javax.swing.JButton();
         passwordLabel = new javax.swing.JLabel();
         passwordText = new javax.swing.JPasswordField();
+        confirmPassword = new javax.swing.JLabel();
+        confirmText = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -91,26 +93,35 @@ public class LogWindow extends javax.swing.JDialog {
             }
         });
 
+        confirmPassword.setFont(new java.awt.Font("新細明體", 1, 12)); // NOI18N
+        confirmPassword.setText("Enter again:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(usernameLabel)
-                    .addComponent(passwordLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(confirmPassword)
+                            .addComponent(logButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(usernameLabel)
+                            .addComponent(passwordLabel))
+                        .addGap(18, 18, 18)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(confirmText)
+                    .addComponent(passwordText)
                     .addComponent(usernameText)
-                    .addComponent(passwordText))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 19, Short.MAX_VALUE)
+                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(logButton, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,13 +132,17 @@ public class LogWindow extends javax.swing.JDialog {
                     .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordLabel)
-                    .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(confirmPassword)
+                    .addComponent(confirmText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logButton)
                     .addComponent(exitButton))
-                .addGap(18, 18, 18))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -162,6 +177,7 @@ public class LogWindow extends javax.swing.JDialog {
     private void exitButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exitButtonKeyPressed
         // TODO add your handling code here:
         if(evt.getKeyChar() == '\n'){
+            continueToConnect = false;
             setVisible(false);
         }
     }//GEN-LAST:event_exitButtonKeyPressed
@@ -207,7 +223,9 @@ public class LogWindow extends javax.swing.JDialog {
             }
         });
     }
-    
+    private void checkPassword(){
+        
+    }
     private void parseLogInfo(){
         password = new String(passwordText.getPassword());
         System.out.println(password);
@@ -221,12 +239,18 @@ public class LogWindow extends javax.swing.JDialog {
             usernameText.setText("");
         }
         else{
+            if(passwordText.getPassword() != passwordText.getPassword()){
+                 JOptionPane.showMessageDialog(this,"Please check yout password again.","Password error",JOptionPane.INFORMATION_MESSAGE);
+                 return;
+            }
             username = usernameText.getText();
             continueToConnect = true;
             setVisible(false);  // hide dialog and wait for connection
-                }
+        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel confirmPassword;
+    private javax.swing.JPasswordField confirmText;
     private javax.swing.JButton exitButton;
     private javax.swing.JButton logButton;
     private javax.swing.JLabel passwordLabel;

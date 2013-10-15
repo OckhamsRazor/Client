@@ -10,12 +10,14 @@ import gui.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Simon
  */
 public class FileRecv implements Runnable{
+    private ChatFrame frame;
     private ServerSocket server;
     private Socket recvSocket;
     private final int port = 5577; // default
@@ -29,8 +31,9 @@ public class FileRecv implements Runnable{
     private int current;
     private byte [] bufferArray;
     
-    public FileRecv(File f, int fsize){
-        file = f;
+    public FileRecv(ChatFrame f, File fr, int fsize){
+        frame = f;
+        file = fr;
         filesize = fsize;
     }
     
@@ -66,6 +69,7 @@ public class FileRecv implements Runnable{
                 recvSocket.close();
                 server.close();
                 System.out.println("SAVE DONE");
+                JOptionPane.showMessageDialog(frame,"Filed download finished!","Downlowd message", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 recvSocket.close();
                 server.close();

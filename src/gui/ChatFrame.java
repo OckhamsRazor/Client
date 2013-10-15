@@ -216,10 +216,15 @@ public class ChatFrame extends javax.swing.JFrame {
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
         // TODO add your handling code here:
         if(client.getLogState()){
-            roomTab.remove(0);  
-            client.logOut();
+            clearTabbedRoom();  
+            try{
+                client.logOut();
+            }catch(IOException e){
+                System.out.println(e.toString());
+            }
         }else{
-            JOptionPane.showMessageDialog(this, "You haven't logged in yet!!", "Log Message", JOptionPane.INFORMATION_MESSAGE);
+           // JOptionPane.showMessageDialog(this, "You haven't logged in yet!!", "Log Message", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
     }//GEN-LAST:event_logOutActionPerformed
 
@@ -292,6 +297,15 @@ public class ChatFrame extends javax.swing.JFrame {
     }
     public void clearTabbedRoom(){
         // delete all rooms except Hall
+        roomTab.removeAll();
+    }
+    public void updateChatRoomUserList(String user){
+        int tabCount = roomTab.getTabCount();
+        if(tabCount == 1) return;
+        for(int i = 1; i < tabCount; ++i){
+            ChatRoomPrivate room = (ChatRoomPrivate) roomTab.getComponentAt(i);
+            room.deleteUser(user);
+        }
     }
     /**
      * @param args the command line arguments
