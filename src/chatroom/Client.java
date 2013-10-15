@@ -167,7 +167,7 @@ public class Client implements Runnable{
             String[] message=state.split("\000");
             System.out.println(message[0]);
             if(state.equals("\001LOGINACK\000\004")) return;
-                /*
+                
             else
             {
                 if(message[0].equals("\001ERROR"))
@@ -186,7 +186,7 @@ public class Client implements Runnable{
                 }
                // o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
 
-            }*/
+            }
             System.out.println("hi");
             /*then check the protocol*/
             }
