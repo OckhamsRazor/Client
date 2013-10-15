@@ -23,7 +23,7 @@ public class ChatFrame extends javax.swing.JFrame {
     /**
      * Creates new form ChatFrame
      */
-    private Client client;
+    public Client client;
      
     
     // client info is accessible

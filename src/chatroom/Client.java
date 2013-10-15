@@ -54,6 +54,7 @@ public class Client implements Runnable{
     private DataInputStream i;
     private DataOutputStream o;
     private Thread thread;
+    private boolean threadRun;
     
     // log & connection state
     private boolean isLoggedIn;
@@ -87,6 +88,7 @@ public class Client implements Runnable{
         userList = new Vector<String>();
         // file transmission
         recvFileMap = new HashMap<String,File>();
+        threadRun = true;
     }
   
     public void setServer(){
@@ -108,8 +110,7 @@ public class Client implements Runnable{
             {
                 System.out.println("Connetion fail!!");
             }
-                    thread=new Thread(this);               
-        thread.start();
+            
             isConnected=true;
             System.out.println("Connetion success!!");
         }
@@ -148,7 +149,10 @@ public class Client implements Runnable{
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        if(threadRun){
+            thread=new Thread(this);
+            thread.start();
+        }
         isLoggedIn = true;
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall
@@ -188,7 +192,6 @@ public class Client implements Runnable{
                // o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
             }
             System.out.println("hi");
-            /*then check the protocol*/
             }
     }
 
@@ -300,9 +303,7 @@ public class Client implements Runnable{
     {
         send("LOGOUT");
         // log state reset
-        socket.close();
         isLoggedIn = false;
-        isConnected = false;
         // user info reset
         username = "";
         password = "";
@@ -310,7 +311,7 @@ public class Client implements Runnable{
         roomMap = new HashMap();
         roomList = new ArrayList();
         roomCount = 0;
-        //
+        threadRun = false;
     }
     
     private void rvRoomNumber(int myRoomNumber, int roomKeyAssigned)
@@ -520,17 +521,14 @@ public class Client implements Runnable{
                 rvInvitation(Integer.parseInt(message[1]));
                 break;
             case("\001FS_REQ"):
-                System.out.println("a");
                 rvFileSendReq(message[1],message[2],message[3]);
                 break;
             case("\001FS_REP_Y"):
-                System.out.println("b");
                 rvFileRecvReply(message[1],message[2]); // receiver/IP
                 break;
             case("\001FS_REP_N"):
-                System.out.println("c");
                 rvFileRecvReply(message[1]);
-				break;
+		break;
             case("\001ERROR"):
                 JOptionPane.showMessageDialog(
                     null,
@@ -560,7 +558,7 @@ public class Client implements Runnable{
                 String msg=i.readUTF();
                 System.out.println(msg+" msg");
                 parseMsg(msg);
-                
+
             } catch (IOException ex) {
                 ex.toString();
             }
