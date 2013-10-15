@@ -58,6 +58,7 @@ public class Client implements Runnable{
     // log & connection state
     private boolean isLoggedIn;
     private boolean isConnected;
+    public boolean connectionState(){return isConnected;}
     public void setLogState(boolean b){ isLoggedIn = b;}
     public boolean getLogState(){return isLoggedIn;}
     
@@ -101,13 +102,16 @@ public class Client implements Runnable{
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             i=new DataInputStream(in);
             o=new DataOutputStream(out);
-            
-             sendName();
-            
+           
+            String state=i.readUTF();
+            if(!state.equals("\001EST\000\004")) 
+            {
+                System.out.println("Connetion fail!!");
+            }
             isConnected=true;
             thread=new Thread(this);               
             thread.start();
-
+            System.out.println("Connetion success!!");
         }
         catch (IOException ex)
         {
@@ -116,16 +120,34 @@ public class Client implements Runnable{
         }
         // should receive user list from server!!
     }
-    public void logIn() throws IOException
+   
+    public void signUp(){
+        SignUpWindow signUpWindow = new SignUpWindow(frame);
+        signUpWindow.setVisible(true);
+        if(!signUpWindow.continueToSignUp) return;
+        username = signUpWindow.username;
+        password = signUpWindow.password;
+        send("NEWUSER\000" +username + "\000" +password);
+    }
+    public void logIn() 
     {
+     
         if(!isConnected) {
-            JOptionPane.showMessageDialog(frame, "Please connect to server first.","Connection error",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Please connect to server first.","Log error",JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+
         logWindow.setVisible(true);
+        if(!logWindow.continueToLog) return;
         username = logWindow.username;
         password = logWindow.password; 
         chatHall = new ChatRoomHall(this);
+        
+        try {
+            sendName();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
         isLoggedIn = true;
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall
@@ -134,39 +156,40 @@ public class Client implements Runnable{
       
     }
     public void sendName() throws IOException
-    {
+    {       
+            send("LOGIN\000"+ username+"\000"+password);
+            System.out.println("a");
+            
+            while(true) {
             String state=i.readUTF();
-            if(state.equals("\001EST\000\004"))
+            
+            System.out.println(state);
+            String[] message=state.split("\000");
+            System.out.println(message[0]);
+            if(state.equals("\001LOGINACK\000\004")) return;
+                /*
+            else
             {
-                o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
-                System.out.println("hi");
-            }
-            System.out.println("state");
-            while(true)
-            {
-                state=i.readUTF();
-                System.out.println(state);
-                String[] message=state.split("\000");
-                System.out.println(message[0]);
-                if(state.equals("\001LOGINACK\000\004"))
-                    break;
-                else
+                if(message[0].equals("\001ERROR"))
                 {
-                    if(message[0].equals("\001ERROR"))
-                    {
-                        JOptionPane.showMessageDialog(
-                    null,
-                    message[1],
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                    }
-                    connecitonWindow.setVisible(true);
-                    if(!connecitonWindow.getConnectionPermission()) return;
-                    o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
+                    JOptionPane.showMessageDialog(frame,
+                                                message[1],
+                                                "Please sign up first!!",
+                                                JOptionPane.ERROR_MESSAGE);
+                    signUp();
+                }else{
+                    JOptionPane.showMessageDialog(frame,
+                                                message[1],
+                                                "Please login again.",
+                                                JOptionPane.INFORMATION_MESSAGE);
+                    logIn();
                 }
-            }
+               // o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
+
+            }*/
             System.out.println("hi");
             /*then check the protocol*/
+            }
     }
 
     public void send(String msg)

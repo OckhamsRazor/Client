@@ -26,7 +26,6 @@ public class ConnectionWindow extends javax.swing.JDialog {
         client = c;
         continueToConnect = false;
         initComponents();
-        
     }
 
     /**
