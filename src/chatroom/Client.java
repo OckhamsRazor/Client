@@ -108,9 +108,9 @@ public class Client implements Runnable{
             {
                 System.out.println("Connetion fail!!");
             }
+                    thread=new Thread(this);               
+        thread.start();
             isConnected=true;
-            thread=new Thread(this);               
-            thread.start();
             System.out.println("Connetion success!!");
         }
         catch (IOException ex)
@@ -148,6 +148,7 @@ public class Client implements Runnable{
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         isLoggedIn = true;
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall
@@ -185,7 +186,6 @@ public class Client implements Runnable{
                     logIn();
                 }
                // o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
-
             }
             System.out.println("hi");
             /*then check the protocol*/
