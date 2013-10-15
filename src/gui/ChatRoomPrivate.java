@@ -40,7 +40,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         doc = inputTextPane.getStyledDocument();
         inputText = new String();
         dialogText = new String();              // empty string
-        userList = new Vector<String>();        // get list form server!!    
+        userList = new Vector<String>();        // get list form server when initialized    
         userListPanel.setListData(userList);
         inviteList = new GuestListWindow(client.getFrame(), "Select Guest");
         inviteList.setLocationRelativeTo(client.getFrame());
@@ -305,7 +305,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
     public void deleteUser(String user){
         userList.remove(user);
         userListPanel.setListData(userList);
-        //client.userList.remove(user);
+        // refresh whisper combo items
         sendToCombo.removeItem(user);
     }
     

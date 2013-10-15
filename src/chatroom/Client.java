@@ -104,7 +104,6 @@ public class Client implements Runnable{
         
         try
         { 
-            
             socket = new Socket(InetAddress.getByName(serverIP),port);
             
             DataInputStream in = new DataInputStream(socket.getInputStream());
@@ -113,20 +112,22 @@ public class Client implements Runnable{
             o=new DataOutputStream(out);
             
              sendName();
-             
-            isConnected=true;
-            chatHall = new ChatRoomHall(this);
-            thread=new Thread(this);               
-            thread.start();
-            isLoggedIn = true;
-            roomList.add(chatHall);
-            roomMap.put(0,chatHall); // cannot add friends in Hall
-            frame.addHall(chatHall);
-            chatHall.enterMessage(username);
+            if(!logWindow.continueToConnect){ 
+                isConnected=true;
+                chatHall = new ChatRoomHall(this);
+                thread=new Thread(this);               
+                thread.start();
+                isLoggedIn = true;
+                roomList.add(chatHall);
+                roomMap.put(0,chatHall); // cannot add friends in Hall
+                frame.addHall(chatHall);
+                chatHall.enterMessage(username);
+            }
         }
         catch (IOException ex)
         {
-            somethingWrong();
+                JOptionPane.showMessageDialog(frame, "Someting wrong happened whend connecting server.\n" 
+                                    + ex.toString()+ "\nPlease try it again.","Connection Error", JOptionPane.ERROR_MESSAGE);
         }
         // should receive user list from server!!
 
@@ -147,6 +148,7 @@ public class Client implements Runnable{
                 else
                 {
                     logWindow.setVisible(true);
+                    if(!logWindow.continueToConnect) return;
                     username = logWindow.username;
                     password = logWindow.password;
                     o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
@@ -155,26 +157,14 @@ public class Client implements Runnable{
             System.out.println("hi");
             /*then check the protocol*/
     }
-    public void somethingWrong() throws IOException
-    {
-        System.out.print("error");
-        /*if(isConnected)
-        {   
-            o.writeUTF("haha");
-        }*/
-        JOptionPane.showMessageDialog(frame, "Please Log in again." ,"Connection Error", JOptionPane.ERROR_MESSAGE);
-    }
+
     public void send(String msg)
     {
         try {
             o.writeUTF("\001"+msg+"\000\004");
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            try {
-                somethingWrong();
-            } catch (IOException ex1) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            
         }
     }
     
@@ -272,16 +262,21 @@ public class Client implements Runnable{
         send("SPEAK_ACK\000"+Integer.toString(sender_port)+"\000");
     }
     
-    public void logOut()
+    public void logOut() throws IOException
     {
-        // user info initialization
-        roomMap.remove(0);
+        send("LOGOUT");
+        // log state reset
+        socket.close();
+        isLoggedIn = false;
+        isConnected = false;
+        // user info reset
+        username = "";
+        password = "";
+        // room info reset
         roomMap = new HashMap();
         roomList = new ArrayList();
         roomCount = 0;
-        username = "";
-        isLoggedIn = false;
-        send("LOGOUT");
+        //
     }
     
     private void rvRoomNumber(int myRoomNumber, int roomKeyAssigned)
@@ -319,6 +314,8 @@ public class Client implements Runnable{
         userList.remove(user);
         chatHall.updateUserList(userList);
         chatHall.leaveMessage(user);
+        // update private room user list
+        frame.updateChatRoomUserList(user);
     }
     
     private void rvChangeState(String user, String status)
@@ -404,13 +401,13 @@ public class Client implements Runnable{
        int option = JOptionPane.showConfirmDialog(frame, sender + " want to send a file to you.\n"
                                                         + "File Name: " + filename +'\n'
                                                         + "File Size: " + filesize
-                                                ,"file request",JOptionPane.YES_NO_OPTION);
+                                                ,"File request",JOptionPane.YES_NO_OPTION);
         if(option == JOptionPane.YES_OPTION){
             JFileChooser recvFileDialog = new JFileChooser();
             int result = recvFileDialog.showSaveDialog(frame);
             if( result == JFileChooser.APPROVE_OPTION){
                 File file = recvFileDialog.getSelectedFile();
-                Thread fsThread = new Thread (new FileRecv(file,Integer.parseInt(filesize)));
+                Thread fsThread = new Thread (new FileRecv(frame, file,Integer.parseInt(filesize)));
                 fsThread.start();
                 sendFileRecvReply(true,sender);
             }else{
@@ -435,9 +432,12 @@ public class Client implements Runnable{
     }
     public void rvSpeak(String sender, String sender_ip, int sender_port)
     {
-        int my_port=5570;
-        sound=new Sound();
-        sound.connect2(sender_ip, sender_port, my_port);
+        int reply = JOptionPane.showConfirmDialog(frame, "( " + sender + " ) wants to see you", "Audio request", JOptionPane.YES_NO_CANCEL_OPTION);
+        if(reply == JOptionPane.OK_OPTION){
+            int my_port=5570;
+            sound=new Sound();
+            sound.connect2(sender_ip, sender_port, my_port);
+        }else return;
     }
     public void rvSpeakAck(String sender_ip, int sender_port)
     {
@@ -528,12 +528,7 @@ public class Client implements Runnable{
                 parseMsg(msg);
                 
             } catch (IOException ex) {
-                try {
-               //     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                    somethingWrong();
-                } catch (IOException ex1) {
-               //     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex1);
-                }
+                ex.toString();
             }
         }
     }
