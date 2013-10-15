@@ -139,13 +139,25 @@ public class Client implements Runnable{
                 o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
                 System.out.println("hi");
             }
+            System.out.println("state");
             while(true)
             {
                 state=i.readUTF();
+                System.out.println(state);
+                String[] message=state.split("\000");
+                System.out.println(message[0]);
                 if(state.equals("\001LOGINACK\000\004"))
                     break;
                 else
                 {
+                    if(message[0].equals("\001ERROR"))
+                    {
+                        JOptionPane.showMessageDialog(
+                    null,
+                    message[1],
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                    }
                     logWindow.setVisible(true);
                     username = logWindow.username;
                     password = logWindow.password;
