@@ -241,18 +241,28 @@ public class ChatFrame extends javax.swing.JFrame {
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
-       
      //   client.sendFileSendReq(client.username);
     }//GEN-LAST:event_sendFileActionPerformed
 
     private void audioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioActionPerformed
         // TODO add your handling code here:
-        
+        if(!client.getLogState()) return;
+        GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
+        sendTargetWindow.setList(client.userList);
+        sendTargetWindow.setVisible(true);
+        if(!sendTargetWindow.continueToSend) return;
+        client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
+
     }//GEN-LAST:event_audioActionPerformed
 
     private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
         // TODO add your handling code here:
-        // gui fuction
+        if(!client.getLogState()) return;
+        GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
+        sendTargetWindow.setList(client.userList);
+        sendTargetWindow.setVisible(true);
+        if(!sendTargetWindow.continueToSend) return;
+       // client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
     }//GEN-LAST:event_videoActionPerformed
 
     // should log in first!!
