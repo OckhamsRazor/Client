@@ -21,7 +21,6 @@ public class LogWindow extends javax.swing.JDialog {
     public String username;
     public String password;
     public String confirm;
-    public boolean continueToConnect;
     
     
     public LogWindow(java.awt.Frame parent) {
@@ -163,7 +162,6 @@ public class LogWindow extends javax.swing.JDialog {
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         // TODO add your handling code here:
-        continueToConnect = false;
         setVisible(false);
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -185,7 +183,6 @@ public class LogWindow extends javax.swing.JDialog {
     private void exitButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exitButtonKeyPressed
         // TODO add your handling code here:
         if(evt.getKeyChar() == '\n'){
-            continueToConnect = false;
             setVisible(false);
         }
     }//GEN-LAST:event_exitButtonKeyPressed
@@ -210,12 +207,10 @@ public class LogWindow extends javax.swing.JDialog {
         }
         else{
             if(!password.equals(confirm)){
-
                  JOptionPane.showMessageDialog(this,"Please check your password again.","Password error",JOptionPane.INFORMATION_MESSAGE);
                  return;
             }
             username = usernameText.getText();
-            continueToConnect = true;
             setVisible(false);  // hide dialog and wait for connection
         }
     }

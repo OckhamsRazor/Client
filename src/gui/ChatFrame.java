@@ -179,11 +179,6 @@ public class ChatFrame extends javax.swing.JFrame {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         if(!client.getLogState()){
-            try {
-                client.connectServer();
-            } catch (IOException ex) {
-                Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         else{
             JOptionPane.showMessageDialog(this,"You are already logged in","",JOptionPane.INFORMATION_MESSAGE);

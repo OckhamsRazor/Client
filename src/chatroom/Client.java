@@ -43,7 +43,7 @@ public class Client implements Runnable{
     
     //log & server setting
     private LogWindow logWindow;
-    private SettingWindow settingWindow;
+    private ConnectionWindow connecitonWindow;
     private int port;
     private String serverIP;
     public String username;
@@ -73,10 +73,10 @@ public class Client implements Runnable{
         logWindow = new LogWindow(frame);
         logWindow.setLocationRelativeTo(frame);
         logWindow.setVisible(false);
-        settingWindow = new SettingWindow(frame);
-        settingWindow.setLocationRelativeTo(frame);
-        settingWindow.setVisible(false);
-        serverIP = "140.112.18.222";
+        connecitonWindow = new ConnectionWindow(frame, this);
+        connecitonWindow.setLocationRelativeTo(frame);
+        connecitonWindow.setVisible(false);
+        serverIP = "140.112.18.224";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -89,20 +89,11 @@ public class Client implements Runnable{
     }
   
     public void setServer(){
-        settingWindow.setVisible(true);
-        serverIP = settingWindow.serverIP;
-        port = settingWindow.port;
-        
+        connecitonWindow.setVisible(true);
     }
-    public void connectServer() throws IOException
-    {
-        logWindow.setVisible(true);
-        if(!logWindow.continueToConnect) return;
-        
-        username = logWindow.username;
-        password = logWindow.password; 
-        
-        try
+    
+    public void connect(String IP, int p){
+         try
         { 
             socket = new Socket(InetAddress.getByName(serverIP),port);
             
@@ -112,17 +103,11 @@ public class Client implements Runnable{
             o=new DataOutputStream(out);
             
              sendName();
-            if(!logWindow.continueToConnect){ 
-                isConnected=true;
-                chatHall = new ChatRoomHall(this);
-                thread=new Thread(this);               
-                thread.start();
-                isLoggedIn = true;
-                roomList.add(chatHall);
-                roomMap.put(0,chatHall); // cannot add friends in Hall
-                frame.addHall(chatHall);
-                chatHall.enterMessage(username);
-            }
+            
+            isConnected=true;
+            thread=new Thread(this);               
+            thread.start();
+
         }
         catch (IOException ex)
         {
@@ -130,7 +115,23 @@ public class Client implements Runnable{
                                     + ex.toString()+ "\nPlease try it again.","Connection Error", JOptionPane.ERROR_MESSAGE);
         }
         // should receive user list from server!!
-
+    }
+    public void logIn() throws IOException
+    {
+        if(!isConnected) {
+            JOptionPane.showMessageDialog(frame, "Please connect to server first.","Connection error",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        logWindow.setVisible(true);
+        username = logWindow.username;
+        password = logWindow.password; 
+        chatHall = new ChatRoomHall(this);
+        isLoggedIn = true;
+        roomList.add(chatHall);
+        roomMap.put(0,chatHall); // cannot add friends in Hall
+        frame.addHall(chatHall);
+        chatHall.enterMessage(username);
+      
     }
     public void sendName() throws IOException
     {
@@ -159,10 +160,8 @@ public class Client implements Runnable{
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
                     }
-                    logWindow.setVisible(true);
-                    if(!logWindow.continueToConnect) return;
-                    username = logWindow.username;
-                    password = logWindow.password;
+                    connecitonWindow.setVisible(true);
+                    if(!connecitonWindow.getConnectionPermission()) return;
                     o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
                 }
             }

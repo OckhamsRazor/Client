@@ -9,16 +9,22 @@ import chatroom.Client;
  *
  * @author eecamp
  */
-public class SettingWindow extends javax.swing.JDialog {
+public class ConnectionWindow extends javax.swing.JDialog {
 
     /**
-     * Creates new form SettingWindow
+     * Creates new form ConnectionWindow
      */
 
-    public String  serverIP;
-    public int port;
-    public SettingWindow(java.awt.Frame parent) {
+    private String  serverIP;
+    private int port;
+    private Client client;
+    private boolean continueToConnect;
+    public boolean getConnectionPermission() {return continueToConnect;}
+    
+    public ConnectionWindow(java.awt.Frame parent, Client c) {
         super(parent, true);
+        client = c;
+        continueToConnect = false;
         initComponents();
         
     }
@@ -36,8 +42,8 @@ public class SettingWindow extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         IPText = new javax.swing.JTextField();
         portText = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        connetServer = new javax.swing.JButton();
+        cancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -58,17 +64,22 @@ public class SettingWindow extends javax.swing.JDialog {
         portText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         portText.setText("5566");
 
-        jButton1.setText("OK");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        connetServer.setText("OK");
+        connetServer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                connetServerMouseClicked(evt);
+            }
+        });
+        connetServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connetServerActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cancel");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        cancel.setText("Cancel");
+        cancel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                cancelMouseClicked(evt);
             }
         });
 
@@ -80,9 +91,9 @@ public class SettingWindow extends javax.swing.JDialog {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(connetServer, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
@@ -106,8 +117,8 @@ public class SettingWindow extends javax.swing.JDialog {
                     .addComponent(portText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(connetServer)
+                    .addComponent(cancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -118,68 +129,34 @@ public class SettingWindow extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_IPTextActionPerformed
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void connetServerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_connetServerMouseClicked
         // TODO add your handling code here:
         parseServerInfo();
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_connetServerMouseClicked
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelMouseClicked
         // TODO add your handling code here:
+        continueToConnect = false;
         setVisible(false);
-    }//GEN-LAST:event_jButton2MouseClicked
+    }//GEN-LAST:event_cancelMouseClicked
+
+    private void connetServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connetServerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_connetServerActionPerformed
     private void parseServerInfo(){
         serverIP = IPText.getText();
         // check legal port 
         String port_str =portText.getText();
-        
         port = new Integer(port_str).intValue();
+        continueToConnect = true;
+        client.connect(serverIP,port);
         setVisible(false);
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SettingWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SettingWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SettingWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SettingWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                SettingWindow dialog = new SettingWindow(new javax.swing.JFrame());
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPText;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton cancel;
+    private javax.swing.JButton connetServer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField portText;
