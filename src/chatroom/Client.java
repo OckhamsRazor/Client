@@ -260,12 +260,16 @@ public class Client implements Runnable{
     
     public void sendSpeakInvite(String receiver)
     {
-        
+        int sender_port=5560;
+        sound=new Sound();
+        sound.connect1(sender_port);
+        send("SPEAK\000"+receiver+"\000"+Integer.toString(sender_port)+"\000");
     }
     
-    public void sendSpeakAck(int sender_port)
+    public void sendSpeakAck()
     {
-        
+        int sender_port=5570;
+        send("SPEAK_ACK\000"+Integer.toString(sender_port)+"\000");
     }
     
     public void logOut()
@@ -431,11 +435,13 @@ public class Client implements Runnable{
     }
     public void rvSpeak(String sender, String sender_ip, int sender_port)
     {
-        
+        int my_port=5570;
+        sound=new Sound();
+        sound.connect2(sender_ip, sender_port, my_port);
     }
     public void rvSpeakAck(String sender_ip, int sender_port)
     {
-        
+        sound.connect3(sender_ip, sender_port);
     }
     private void parseMsg(String msg)
     {

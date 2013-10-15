@@ -252,6 +252,7 @@ public class ChatFrame extends javax.swing.JFrame {
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
+
     }//GEN-LAST:event_audioActionPerformed
 
     private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
