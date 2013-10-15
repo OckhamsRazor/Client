@@ -247,6 +247,7 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void audioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_audioActionPerformed
 
     private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
