@@ -76,7 +76,7 @@ public class Client implements Runnable{
         settingWindow = new SettingWindow(frame);
         settingWindow.setLocationRelativeTo(frame);
         settingWindow.setVisible(false);
-        serverIP = "140.112.18.222";
+        serverIP = "140.112.18.224";
         port = 5566;
         isLoggedIn=false;
         isConnected=false; 
@@ -112,7 +112,7 @@ public class Client implements Runnable{
             o=new DataOutputStream(out);
             
              sendName();
-            if(!logWindow.continueToConnect){ 
+            if(logWindow.continueToConnect){ 
                 isConnected=true;
                 chatHall = new ChatRoomHall(this);
                 thread=new Thread(this);               
