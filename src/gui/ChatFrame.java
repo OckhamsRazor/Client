@@ -27,8 +27,9 @@ public class ChatFrame extends javax.swing.JFrame {
      
     
     // client info is accessible
-    public ChatFrame() {
+    public ChatFrame(String title) {
         initComponents();
+        setTitle(title);
         client = new Client(this);
         client.setLogState(false);
     }
@@ -248,7 +249,9 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
        if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
-        sendTargetWindow.setList(client.userList);
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
@@ -259,7 +262,9 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
-        sendTargetWindow.setList(client.userList);
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
@@ -270,7 +275,9 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
-        sendTargetWindow.setList(client.userList);
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
        // client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());

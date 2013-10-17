@@ -26,6 +26,7 @@ public class GuestListWindow extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         setTitle(title);
+        setLocationRelativeTo(parent);
         guest = new String("");
     }
     public void setList(Vector<String> s){

@@ -80,8 +80,8 @@ public class Client implements Runnable{
         connecitonWindow.setLocationRelativeTo(frame);
         connecitonWindow.setVisible(false);
 
-        serverIP = "140.112.18.224";
-        port = 5566;
+//        serverIP = "140.112.18.224";
+//        port = 5566;
         isLoggedIn=false;
         isConnected=false; 
         roomMap = new HashMap();
@@ -99,7 +99,7 @@ public class Client implements Runnable{
     public void connect(String IP, int p){
          try
         { 
-            socket = new Socket(InetAddress.getByName(serverIP),port);
+            socket = new Socket(InetAddress.getByName(IP),p);
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             i=new DataInputStream(in);

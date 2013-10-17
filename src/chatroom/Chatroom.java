@@ -20,7 +20,7 @@ public class Chatroom {
     private static ChatFrame _FrameObject;
     
     public static void main(String[] args) throws IOException {
-        _FrameObject = new ChatFrame();
+        _FrameObject = new ChatFrame("EEMSN");
         _FrameObject.setVisible(true);
         // TODO code application logic here
         //Sound sound1=new Sound();
