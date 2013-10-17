@@ -84,11 +84,11 @@ public class ChatRoomHall extends javax.swing.JPanel {
         for(int c=0; c<chr.length; c++) {
             String v = mp.get(new Integer(c));
             if(v == null) {
-                tt.append("\002p\003");
+                tt.append("\002m\003");
                 tt.append(chr[c]);
             }
             else {
-                tt.append("\002m\003");
+                tt.append("\002p\003");
                 tt.append(v);
             }
         }
@@ -340,7 +340,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
         dialogTextPane.setText(dialogText);
     };
     public void leaveMessage(String user){
-        dialogText = dialogText + "\n" + user + " leave this room";
+        dialogText = dialogText + "\n" + "( " +user + "  )"+ " leave this room";
         dialogTextPane.setText(dialogText);
     }
     // set original user list from client

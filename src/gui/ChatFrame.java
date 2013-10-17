@@ -227,12 +227,14 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void setServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setServerActionPerformed
         // TODO add your handling code here:
+        if(client.connectionState()) return;
         client.setServer();
     }//GEN-LAST:event_setServerActionPerformed
 
     private void leaveRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveRoomActionPerformed
         // TODO add your handling code here:
         // not in the hall
+        if(!client.getLogState()) return;
         if(roomTab.getSelectedIndex() != 0){
             deleteRoom();
         }
@@ -301,8 +303,6 @@ public class ChatFrame extends javax.swing.JFrame {
         Vector<String> s = new Vector<String>(client.userList);
         s.remove(client.username);
         sendTargetWindow.setList(s);
-        sendTargetWindow.setList(client.userList);
-
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendVisual(sendTargetWindow.getSelectedGuest());
@@ -312,6 +312,9 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!client.connectionState()) {
             JOptionPane.showMessageDialog(this, "Please connect to server first.","Log error",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }else if(client.getLogState()) {
+            JOptionPane.showMessageDialog(this, "Please logout out first.","Log error",JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         client.signUp();
