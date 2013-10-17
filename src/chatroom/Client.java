@@ -22,9 +22,7 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import sound.Sound;
-import try3.Try3;
 
 /**
  *
@@ -56,6 +54,7 @@ public class Client implements Runnable{
     private DataInputStream i;
     private DataOutputStream o;
     private Thread thread;
+    private boolean threadRun;
     
     // log & connection state
     private boolean isLoggedIn;
@@ -68,11 +67,6 @@ public class Client implements Runnable{
     private HashMap recvFileMap;
     
     public Sound sound;
-<<<<<<< HEAD
-    public boolean audioStreamInUse;
-=======
-    public Try3 trying;
->>>>>>> master
     
     
     public Client(ChatFrame f)
@@ -86,8 +80,8 @@ public class Client implements Runnable{
         connecitonWindow.setLocationRelativeTo(frame);
         connecitonWindow.setVisible(false);
 
-//        serverIP = "140.112.18.224";
-//        port = 5566;
+        serverIP = "140.112.18.224";
+        port = 5566;
         isLoggedIn=false;
         isConnected=false; 
         roomMap = new HashMap();
@@ -329,36 +323,6 @@ public class Client implements Runnable{
         int sender_port=5570;
         send("SPEAK_ACK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
     }
-    
-    public void sendVisual(String receiver)
-    {        
-        String sender_ip;
-        sender_ip=""+socket.getLocalAddress();
-        char[] char_ip = sender_ip.toCharArray();
-        String recvIP;
-        StringBuffer temp_ip = new StringBuffer("");
-        for(int i = 1; i < sender_ip.length(); ++i){
-            temp_ip.append(char_ip[i]);
-        }
-        recvIP = temp_ip.toString();
-        String newIP=recvIP+":5590";
-        send("VISUAL\000"+receiver+"\000"+newIP+"\000");
-        trying=new Try3();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                trying.start();
-            }
-        });
-        trying.receive(newIP);
-    }
-    
-    public void sendVisualAck(String receiver, String url)
-    {        
-        send("VISUAL_ACK\000"+receiver+"\000"+url+"\000");
-        
-        trying.receive(url);
-    }
 
     
     private void rvRoomNumber(int myRoomNumber, int roomKeyAssigned)
@@ -540,41 +504,6 @@ public class Client implements Runnable{
         recvIP = temp_ip.toString();
         sound.connect3(recvIP, sender_port);
     }
-    
-    public void rvVisual(String sender, String s)
-    {
-        int reply = JOptionPane.showConfirmDialog(frame, "( " + sender + " ) wants to see you", "Audio request", JOptionPane.YES_NO_CANCEL_OPTION);
-        String sender_ip;
-        sender_ip=""+socket.getLocalAddress();
-        char[] char_ip = sender_ip.toCharArray();
-        String recvIP;
-        StringBuffer temp_ip = new StringBuffer("");
-        for(int i = 1; i < sender_ip.length(); ++i){
-            temp_ip.append(char_ip[i]);
-        }
-        recvIP = temp_ip.toString();
-        String newIP=recvIP+":5580";
-        
-        if(reply == JOptionPane.OK_OPTION){
-            trying=new Try3();
-            SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                trying.start();
-            }
-        });
-        }else return;
-        sendVisualAck(sender,newIP);
-        trying.send(s);
-    }
-    
-    public void rvVisualAck(String s)
-    {
-        trying.send(s);
-    }
-    
-    
-    
     private void parseMsg(String msg)
     {
         String[] message=msg.split("\000");
@@ -633,7 +562,7 @@ public class Client implements Runnable{
                 JOptionPane.showMessageDialog(
                     null,
                     message[1],
-                    "Username invalid. Please sign up first.",
+                    "Error",
                     JOptionPane.ERROR_MESSAGE
                 );
                 break;
@@ -642,12 +571,6 @@ public class Client implements Runnable{
                 break;
             case("\001SPEAK_ACK"):
                 rvSpeakAck(message[1], Integer.parseInt(message[2]));
-                break;
-            case("\001VISUAL"):
-                rvVisual(message[1],message[2]);
-                break;
-            case("\001VISUAL_ACK"):
-                rvVisualAck(message[1]);
                 break;
             default:
                 break;
