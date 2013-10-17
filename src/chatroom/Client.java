@@ -265,13 +265,13 @@ public class Client implements Runnable{
         int sender_port=5560;
         sound=new Sound();
         sound.connect1(sender_port);
-        send("SPEAK\000"+receiver+"\000"+Integer.toString(sender_port)+"\000");
+        send("SPEAK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
     }
     
-    public void sendSpeakAck()
+    public void sendSpeakAck(String receiver)
     {
         int sender_port=5570;
-        send("SPEAK_ACK\000"+Integer.toString(sender_port)+"\000");
+        send("SPEAK_ACK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
     }
     
     public void logOut() throws IOException
@@ -444,16 +444,30 @@ public class Client implements Runnable{
     }
     public void rvSpeak(String sender, String sender_ip, int sender_port)
     {
-        int reply = JOptionPane.showConfirmDialog(frame, "( " + sender + " ) wants to see you", "Audio request", JOptionPane.YES_NO_CANCEL_OPTION);
+        int reply = JOptionPane.showConfirmDialog(frame, "( " + sender + " ) wants to talk to you", "Audio request", JOptionPane.YES_NO_CANCEL_OPTION);
+        char[] char_ip = sender_ip.toCharArray();
+        String recvIP;
+        StringBuffer temp_ip = new StringBuffer("");
+        for(int i = 1; i < sender_ip.length(); ++i){
+            temp_ip.append(char_ip[i]);
+        }
+        recvIP = temp_ip.toString();
         if(reply == JOptionPane.OK_OPTION){
             int my_port=5570;
             sound=new Sound();
-            sound.connect2(sender_ip, sender_port, my_port);
+            sound.connect2(recvIP, sender_port, my_port);
         }else return;
     }
     public void rvSpeakAck(String sender_ip, int sender_port)
     {
-        sound.connect3(sender_ip, sender_port);
+        char[] char_ip = sender_ip.toCharArray();
+        String recvIP;
+        StringBuffer temp_ip = new StringBuffer("");
+        for(int i = 1; i < sender_ip.length(); ++i){
+            temp_ip.append(char_ip[i]);
+        }
+        recvIP = temp_ip.toString();
+        sound.connect3(recvIP, sender_port);
     }
     private void parseMsg(String msg)
     {
