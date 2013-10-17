@@ -48,6 +48,49 @@ public class ChatRoomHall extends javax.swing.JPanel {
         whisper = false;
     }
 
+    java.util.List<Element> getAllElements(JTextPane x) {
+	Element[] roots = x.getStyledDocument().getRootElements();
+	return getAllElements(roots);
+    }
+    
+    private java.util.List<Element> getAllElements(Element[] roots) {
+        java.util.List<Element> icons = new LinkedList<Element>();
+        for (int a = 0; a < roots.length; a++) {
+            if(roots[a] == null)
+                continue ;
+            icons.add(roots[a]);
+            for (int c = 0; c < roots[a].getElementCount(); c++) {
+                Element element = roots[a].getElement(c);
+                icons.addAll(getAllElements(new Element[] { element }));
+            }
+        }
+        return icons;
+    }
+    
+    public String getInputText(JTextPane x) {
+        Map<Integer,String> mp = new HashMap<Integer,String>();
+        String t =x.getText();
+        java.util.List<Element> els = getAllElements(x);
+        for(Element el : els) {
+            Icon icon = StyleConstants.getIcon(el.getAttributes());
+            if(icon != null) {
+                String tmp = ((ImageIcon)icon).getDescription();
+                // 假设 icon中的desc存放它的 filePath
+                mp.put(el.getStartOffset(), tmp);
+            }
+        }
+        StringBuffer tt = new StringBuffer("");
+        char[] chr = t.toCharArray();
+        for(int c=0; c<chr.length; c++) {
+            String v = mp.get(new Integer(c));
+            if(v == null)
+                tt.append(chr[c]);
+            else
+                tt.append(v);
+        }
+        return tt.toString();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,7 +223,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
     private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
         // TODO add your handling code here:
         inputTextPane.setCaretPosition(inputDoc.getLength());
-        inputTextPane.insertIcon(new ImageIcon("cry.png"));
+        inputTextPane.insertIcon(new ImageIcon("image/cry.png"));
         System.out.println("QQ");
     }//GEN-LAST:event_cryButtonActionPerformed
     private String parseInputText(String str){
