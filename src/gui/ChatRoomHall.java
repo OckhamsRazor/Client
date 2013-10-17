@@ -83,10 +83,14 @@ public class ChatRoomHall extends javax.swing.JPanel {
         char[] chr = t.toCharArray();
         for(int c=0; c<chr.length; c++) {
             String v = mp.get(new Integer(c));
-            if(v == null)
+            if(v == null) {
+                tt.append("\002p\003");
                 tt.append(chr[c]);
-            else
+            }
+            else {
+                tt.append("\002m\003");
                 tt.append(v);
+            }
         }
         return tt.toString();
     }
@@ -193,7 +197,8 @@ public class ChatRoomHall extends javax.swing.JPanel {
         // for test
         if(evt.getKeyChar( )== '\n'&& client.getLogState()){
           //  client.send(parseInputText(inputTextPane.getText()));
-            inputText = inputTextPane.getText();
+//            inputText = inputTextPane.getText();
+            inputText = getInputText(inputTextPane);
             refreshInputPane();
             System.out.println(inputText);
             if(!inputText.equals("") ){
@@ -223,8 +228,10 @@ public class ChatRoomHall extends javax.swing.JPanel {
     private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
         // TODO add your handling code here:
         inputTextPane.setCaretPosition(inputDoc.getLength());
-        inputTextPane.insertIcon(new ImageIcon("image/cry.png"));
-        System.out.println("QQ");
+        ImageIcon icon = new ImageIcon("image/cry.png");
+        inputTextPane.insertIcon(icon);
+        
+        System.out.println(icon.getDescription());
     }//GEN-LAST:event_cryButtonActionPerformed
     private String parseInputText(String str){
         StringBuffer msgBuffer = new StringBuffer(""); // must create a empty buffer first
@@ -247,24 +254,78 @@ public class ChatRoomHall extends javax.swing.JPanel {
         inputTextPane.setText("");
     }
     private void showMessage(){
+        String[] tokens = inputText.split("\002");
+//        assert tokens.length > 0;
         if(whisper){
             String receiver = (String)sendToCombo.getSelectedItem();
-            dialogText = dialogText + "\n" + "( TO "+ receiver + " )"+client.username + " :" + inputText;
+            dialogText = dialogText + "\n" + "( TO "+ receiver + " )"+client.username + " :";// + inputText;
         }
         else{
-            dialogText = dialogText + "\n" + client.username + " :" + inputText;
+            dialogText = dialogText + "\n" + client.username + " :";// + inputText;
         }
         dialogTextPane.setText(dialogText);
+        
+        for (String token : tokens) {
+            String[] subTokens = token.split("\003");
+            assert subTokens.length == 2;
+            String type = subTokens[0];
+            String content = subTokens[1];
+            System.out.println(type);
+            System.out.println(content);
+            //StyledDocument doc = dialogTextPane.getStyledDocument();
+            
+            try {
+                if (type.equals("m")) {
+                    //doc.insertString(doc.getLength(), content, null);
+                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), type, null);
+                }
+                else if (type.equals("p")) {
+                    dialogTextPane.insertIcon(new ImageIcon(content));
+                }
+                else {
+                    System.out.println("WRONG MESSAGE QQQQQQQQQQQQQQQQQQQQ");
+                }
+            }
+            catch (BadLocationException ex) {
+                System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
+            }
+        }
     }
     public void showRecvMessage(String sender, String msg, boolean whisper_recv){
-     
+        String[] tokens = msg.split("\002");
         if(whisper_recv){
-                dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :" + msg;
+                dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :";// + msg;
+        }
+        else{
+            dialogText = dialogText + "\n" + sender + " :";// + msg;
+        }
+        dialogTextPane.setText(dialogText);
+        
+        for (String token : tokens) {
+            String[] subTokens = token.split("\003");
+            assert subTokens.length == 2;
+            String type = subTokens[0];
+            String content = subTokens[1];
+            System.out.println(type);
+            System.out.println(content);
+            //StyledDocument doc = dialogTextPane.getStyledDocument();
+            
+            try {
+                if (type.equals("m")) {
+                    //doc.insertString(doc.getLength(), content, null);
+                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), type, null);
+                }
+                else if (type.equals("p")) {
+                    dialogTextPane.insertIcon(new ImageIcon(content));
+                }
+                else {
+                    System.out.println("WRONG MESSAGE QQQQQQQQQQQQQQQQQQQQ");
+                }
             }
-            else{
-                dialogText = dialogText + "\n" + sender + " :" + msg;
+            catch (BadLocationException ex) {
+                System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
             }
-            dialogTextPane.setText(dialogText);
+        }        
     }
     public void enterMessage(String user){
         dialogText = dialogText + "\n" +"( " + user +  " )"+" enters this room";
