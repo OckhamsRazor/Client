@@ -223,7 +223,7 @@ public class ChatRoomHall extends javax.swing.JPanel {
     private void cryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButtonActionPerformed
         // TODO add your handling code here:
         inputTextPane.setCaretPosition(inputDoc.getLength());
-        inputTextPane.insertIcon(new ImageIcon("cry.png"));
+        inputTextPane.insertIcon(new ImageIcon("image/cry.png"));
         System.out.println("QQ");
     }//GEN-LAST:event_cryButtonActionPerformed
     private String parseInputText(String str){
