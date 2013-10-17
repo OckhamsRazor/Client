@@ -99,7 +99,7 @@ public class Client implements Runnable{
     public void connect(String IP, int p){
          try
         { 
-            socket = new Socket(InetAddress.getByName(serverIP),port);
+            socket = new Socket(InetAddress.getByName(IP),p);
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             i=new DataInputStream(in);
@@ -312,9 +312,10 @@ public class Client implements Runnable{
     public void sendSpeakInvite(String receiver)
     {
         int sender_port=5560;
+        send("SPEAK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
         sound=new Sound();
         sound.connect1(sender_port);
-        send("SPEAK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
+        
     }
     
     public void sendSpeakAck(String receiver)
@@ -487,6 +488,7 @@ public class Client implements Runnable{
         recvIP = temp_ip.toString();
         if(reply == JOptionPane.OK_OPTION){
             int my_port=5570;
+            sendSpeakAck(sender);
             sound=new Sound();
             sound.connect2(recvIP, sender_port, my_port);
         }else return;
