@@ -68,11 +68,8 @@ public class Client implements Runnable{
     private HashMap recvFileMap;
     
     public Sound sound;
-<<<<<<< HEAD
     public boolean audioStreamInUse;
-=======
     public Try3 trying;
->>>>>>> master
     
     
     public Client(ChatFrame f)
