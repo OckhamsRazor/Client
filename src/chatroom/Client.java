@@ -54,7 +54,6 @@ public class Client implements Runnable{
     private DataInputStream i;
     private DataOutputStream o;
     private Thread thread;
-    private boolean threadRun;
     
     // log & connection state
     private boolean isLoggedIn;
@@ -67,6 +66,7 @@ public class Client implements Runnable{
     private HashMap recvFileMap;
     
     public Sound sound;
+    public boolean audioStreamInUse;
     
     
     public Client(ChatFrame f)
@@ -560,7 +560,7 @@ public class Client implements Runnable{
                 JOptionPane.showMessageDialog(
                     null,
                     message[1],
-                    "Error",
+                    "Username invalid. Please sign up first.",
                     JOptionPane.ERROR_MESSAGE
                 );
                 break;
