@@ -23,7 +23,7 @@ public class ChatFrame extends javax.swing.JFrame {
     /**
      * Creates new form ChatFrame
      */
-    private Client client;
+    public Client client;
      
     
     // client info is accessible
@@ -47,6 +47,7 @@ public class ChatFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         setServer = new javax.swing.JMenuItem();
+        signUp = new javax.swing.JMenuItem();
         logIn = new javax.swing.JMenuItem();
         logOut = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
@@ -69,14 +70,23 @@ public class ChatFrame extends javax.swing.JFrame {
 
         jMenu1.setText("Option");
 
-        setServer.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
-        setServer.setText("Set server");
+        setServer.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
+        setServer.setText("Connect to server");
         setServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setServerActionPerformed(evt);
             }
         });
         jMenu1.add(setServer);
+
+        signUp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        signUp.setText("Sign up");
+        signUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signUpActionPerformed(evt);
+            }
+        });
+        jMenu1.add(signUp);
 
         logIn.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.ALT_MASK));
         logIn.setText("Log in");
@@ -179,11 +189,7 @@ public class ChatFrame extends javax.swing.JFrame {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         if(!client.getLogState()){
-            try {
-                client.connectServer();
-            } catch (IOException ex) {
-                Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            client.logIn();
         }
         else{
             JOptionPane.showMessageDialog(this,"You are already logged in","",JOptionPane.INFORMATION_MESSAGE);
@@ -270,6 +276,15 @@ public class ChatFrame extends javax.swing.JFrame {
        // client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
     }//GEN-LAST:event_videoActionPerformed
 
+    private void signUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpActionPerformed
+        // TODO add your handling code here:
+        if(!client.connectionState()) {
+            JOptionPane.showMessageDialog(this, "Please connect to server first.","Log error",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        client.signUp();
+    }//GEN-LAST:event_signUpActionPerformed
+
     // should log in first!!
     public void addHall(ChatRoomHall hall){
         roomTab.addTab("Hall", hall);
@@ -326,6 +341,7 @@ public class ChatFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveConv;
     private javax.swing.JMenuItem sendFile;
     private javax.swing.JMenuItem setServer;
+    private javax.swing.JMenuItem signUp;
     private javax.swing.JMenuItem video;
     // End of variables declaration//GEN-END:variables
 }

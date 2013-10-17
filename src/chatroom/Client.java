@@ -43,7 +43,7 @@ public class Client implements Runnable{
     
     //log & server setting
     private LogWindow logWindow;
-    private SettingWindow settingWindow;
+    private ConnectionWindow connecitonWindow;
     private int port;
     private String serverIP;
     public String username;
@@ -54,10 +54,12 @@ public class Client implements Runnable{
     private DataInputStream i;
     private DataOutputStream o;
     private Thread thread;
+    private boolean threadRun;
     
     // log & connection state
     private boolean isLoggedIn;
     private boolean isConnected;
+    public boolean connectionState(){return isConnected;}
     public void setLogState(boolean b){ isLoggedIn = b;}
     public boolean getLogState(){return isLoggedIn;}
     
@@ -73,9 +75,11 @@ public class Client implements Runnable{
         logWindow = new LogWindow(frame);
         logWindow.setLocationRelativeTo(frame);
         logWindow.setVisible(false);
-        settingWindow = new SettingWindow(frame);
-        settingWindow.setLocationRelativeTo(frame);
-        settingWindow.setVisible(false);
+
+        connecitonWindow = new ConnectionWindow(frame, this);
+        connecitonWindow.setLocationRelativeTo(frame);
+        connecitonWindow.setVisible(false);
+
         serverIP = "140.112.18.224";
         port = 5566;
         isLoggedIn=false;
@@ -89,40 +93,28 @@ public class Client implements Runnable{
     }
   
     public void setServer(){
-        settingWindow.setVisible(true);
-        serverIP = settingWindow.serverIP;
-        port = settingWindow.port;
-        
+        connecitonWindow.setVisible(true);
     }
-    public void connectServer() throws IOException
-    {
-        logWindow.setVisible(true);
-        if(!logWindow.continueToConnect) return;
-        
-        username = logWindow.username;
-        password = logWindow.password; 
-        
-        try
+    
+    public void connect(String IP, int p){
+         try
         { 
             socket = new Socket(InetAddress.getByName(serverIP),port);
-            
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             i=new DataInputStream(in);
             o=new DataOutputStream(out);
-            
-             sendName();
-            if(logWindow.continueToConnect){ 
-                isConnected=true;
-                chatHall = new ChatRoomHall(this);
-                thread=new Thread(this);               
-                thread.start();
-                isLoggedIn = true;
-                roomList.add(chatHall);
-                roomMap.put(0,chatHall); // cannot add friends in Hall
-                frame.addHall(chatHall);
-                chatHall.enterMessage(username);
+           
+            String state=i.readUTF();
+            if(!state.equals("\001EST\000\004")) 
+            {
+                System.out.println("Connetion fail!!");
             }
+            thread=new Thread(this);
+            thread.start();
+            isConnected=true;
+            System.out.println("Connetion success!!");
+            JOptionPane.showConfirmDialog(frame, "Welcome to EE Paradise!\nPlease sign up or log in your account.","Welcome",JOptionPane.OK_OPTION);
         }
         catch (IOException ex)
         {
@@ -130,44 +122,101 @@ public class Client implements Runnable{
                                     + ex.toString()+ "\nPlease try it again.","Connection Error", JOptionPane.ERROR_MESSAGE);
         }
         // should receive user list from server!!
+    }
+   
+    public void signUp(){
+        SignUpWindow signUpWindow = new SignUpWindow(frame);
+        signUpWindow.setVisible(true);
+        if(!signUpWindow.continueToSignUp) return;
+        username = signUpWindow.username;
+        password = signUpWindow.password;
+        send("NEWUSER\000" +username + "\000" +password);
+    }
+    public void logIn() 
+    {
+     
+        if(!isConnected) {
+            JOptionPane.showMessageDialog(frame, "Please connect to server first.","Log error",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
 
+        logWindow.setVisible(true);
+        if(!logWindow.continueToLog) return;
+        username = logWindow.username;
+        password = logWindow.password; 
+        
+        send("LOGIN\000"+ username+"\000"+password);        
+    /*
+        try {
+            sendName();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  
+            thread=new Thread(this);
+            thread.start();
+        isLoggedIn = true;
+        roomList.add(chatHall);
+        roomMap.put(0,chatHall); // cannot add friends in Hall
+        frame.addHall(chatHall);
+        chatHall.enterMessage(username);
+      */
     }
     public void sendName() throws IOException
-    {
+    {       
+            send("LOGIN\000"+ username+"\000"+password);
+            System.out.println("a");
+            
+            while(true) {
             String state=i.readUTF();
-            if(state.equals("\001EST\000\004"))
+            
+            System.out.println(state);
+            String[] message=state.split("\000");
+            System.out.println(message[0]);
+            if(state.equals("\001LOGINACK\000\004")) return;
+                
+            else
             {
-                o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
-                System.out.println("hi");
-            }
-            System.out.println("state");
-            while(true)
-            {
-                state=i.readUTF();
-                System.out.println(state);
-                String[] message=state.split("\000");
-                System.out.println(message[0]);
-                if(state.equals("\001LOGINACK\000\004"))
-                    break;
-                else
+                if(message[0].equals("\001ERROR"))
                 {
-                    if(message[0].equals("\001ERROR"))
-                    {
-                        JOptionPane.showMessageDialog(
-                    null,
-                    message[1],
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                    }
-                    logWindow.setVisible(true);
-                    if(!logWindow.continueToConnect) return;
-                    username = logWindow.username;
-                    password = logWindow.password;
-                    o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
+                    JOptionPane.showMessageDialog(frame,
+                                                message[1],
+                                                "Please sign up first!!",
+                                                JOptionPane.ERROR_MESSAGE);
+                    signUp();
+                }else{
+                    JOptionPane.showMessageDialog(frame,
+                                                message[1],
+                                                "Please login again.",
+                                                JOptionPane.INFORMATION_MESSAGE);
+                    logIn();
                 }
+               // o.writeUTF("\001LOGIN\000"+username+"\000"+password+"\000\004");
             }
             System.out.println("hi");
-            /*then check the protocol*/
+            }
+    }
+    private void logInSuccecess(){
+        isLoggedIn = true;
+        chatHall = new ChatRoomHall(this);
+        roomList.add(chatHall);
+        roomMap.put(0,chatHall); // cannot add friends in Hall
+        frame.addHall(chatHall);
+        chatHall.enterMessage(username);
+    }
+        
+    public void logOut() throws IOException
+    {
+        send("LOGOUT");
+        // log state reset
+        isLoggedIn = false;
+        // user info reset
+        username = "";
+        password = "";
+        // room info reset
+        roomMap = new HashMap();
+        roomList = new ArrayList();
+        roomCount = 0;
     }
 
     public void send(String msg)
@@ -273,23 +322,7 @@ public class Client implements Runnable{
         int sender_port=5570;
         send("SPEAK_ACK\000"+receiver+"\000"+socket.getLocalAddress()+"\000"+Integer.toString(sender_port)+"\000");
     }
-    
-    public void logOut() throws IOException
-    {
-        send("LOGOUT");
-        // log state reset
-        socket.close();
-        isLoggedIn = false;
-        isConnected = false;
-        // user info reset
-        username = "";
-        password = "";
-        // room info reset
-        roomMap = new HashMap();
-        roomList = new ArrayList();
-        roomCount = 0;
-        //
-    }
+
     
     private void rvRoomNumber(int myRoomNumber, int roomKeyAssigned)
     {
@@ -475,6 +508,9 @@ public class Client implements Runnable{
         //String[] string2=message[0].split("\001");
         switch(message[0])
         {
+            case("\001LOGINACK"):
+                logInSuccecess();
+                break;
             case("\001NEWROOM"):
                 rvRoomNumber(Integer.parseInt(message[1]),Integer.parseInt(message[2]));
                 break;
@@ -512,17 +548,14 @@ public class Client implements Runnable{
                 rvInvitation(Integer.parseInt(message[1]));
                 break;
             case("\001FS_REQ"):
-                System.out.println("a");
                 rvFileSendReq(message[1],message[2],message[3]);
                 break;
             case("\001FS_REP_Y"):
-                System.out.println("b");
                 rvFileRecvReply(message[1],message[2]); // receiver/IP
                 break;
             case("\001FS_REP_N"):
-                System.out.println("c");
                 rvFileRecvReply(message[1]);
-				break;
+		break;
             case("\001ERROR"):
                 JOptionPane.showMessageDialog(
                     null,
@@ -550,9 +583,9 @@ public class Client implements Runnable{
         {
             try {
                 String msg=i.readUTF();
-                System.out.println(msg+" msg");
+                System.out.println("RUN_THREAD:" +msg);
                 parseMsg(msg);
-                
+
             } catch (IOException ex) {
                 ex.toString();
             }
