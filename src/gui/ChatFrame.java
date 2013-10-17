@@ -27,8 +27,9 @@ public class ChatFrame extends javax.swing.JFrame {
      
     
     // client info is accessible
-    public ChatFrame() {
+    public ChatFrame(String title) {
         initComponents();
+        setTitle(title);
         client = new Client(this);
         client.setLogState(false);
     }
@@ -56,8 +57,11 @@ public class ChatFrame extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         saveConv = new javax.swing.JMenuItem();
         sendFile = new javax.swing.JMenuItem();
+        jMenu6 = new javax.swing.JMenu();
         audio = new javax.swing.JMenuItem();
+        stopAudioStream = new javax.swing.JMenuItem();
         video = new javax.swing.JMenuItem();
+        stopVideoStream = new javax.swing.JMenuItem();
 
         jMenu2.setText("jMenu2");
 
@@ -150,6 +154,10 @@ public class ChatFrame extends javax.swing.JFrame {
         });
         jMenu5.add(sendFile);
 
+        jMenuBar1.add(jMenu5);
+
+        jMenu6.setText("Stream");
+
         audio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
         audio.setText("Audio stream");
         audio.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +165,15 @@ public class ChatFrame extends javax.swing.JFrame {
                 audioActionPerformed(evt);
             }
         });
-        jMenu5.add(audio);
+        jMenu6.add(audio);
+
+        stopAudioStream.setText("Stop Audio stream");
+        stopAudioStream.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopAudioStreamActionPerformed(evt);
+            }
+        });
+        jMenu6.add(stopAudioStream);
 
         video.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
         video.setText("Video stream");
@@ -166,9 +182,12 @@ public class ChatFrame extends javax.swing.JFrame {
                 videoActionPerformed(evt);
             }
         });
-        jMenu5.add(video);
+        jMenu6.add(video);
 
-        jMenuBar1.add(jMenu5);
+        stopVideoStream.setText("Stop Video stream");
+        jMenu6.add(stopVideoStream);
+
+        jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
 
@@ -248,7 +267,9 @@ public class ChatFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
        if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Select Recevier");
-        sendTargetWindow.setList(client.userList);
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendFileSendReq(sendTargetWindow.getSelectedGuest());
@@ -257,9 +278,15 @@ public class ChatFrame extends javax.swing.JFrame {
 
     private void audioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioActionPerformed
         // TODO add your handling code here:
+        if(client.audioStreamInUse) {
+            JOptionPane.showMessageDialog(this, "Please close current audio stream", null, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         if(!client.getLogState()) return;
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
-        sendTargetWindow.setList(client.userList);
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
@@ -269,8 +296,13 @@ public class ChatFrame extends javax.swing.JFrame {
     private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
         // TODO add your handling code here:
         if(!client.getLogState()) return;
+
         GuestListWindow sendTargetWindow = new GuestListWindow(this,"See");
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        sendTargetWindow.setList(s);
         sendTargetWindow.setList(client.userList);
+
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
         client.sendVisual(sendTargetWindow.getSelectedGuest());
@@ -284,6 +316,13 @@ public class ChatFrame extends javax.swing.JFrame {
         }
         client.signUp();
     }//GEN-LAST:event_signUpActionPerformed
+
+    private void stopAudioStreamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopAudioStreamActionPerformed
+        // TODO add your handling code here:
+        if(!client.audioStreamInUse) return;
+        client.sound.disconnect();
+        JOptionPane.showMessageDialog(this, "Audio streaming is disconnected.", "Closing stream ", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_stopAudioStreamActionPerformed
 
     // should log in first!!
     public void addHall(ChatRoomHall hall){
@@ -332,6 +371,7 @@ public class ChatFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem leaveRoom;
     private javax.swing.JMenuItem logIn;
@@ -342,6 +382,8 @@ public class ChatFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem sendFile;
     private javax.swing.JMenuItem setServer;
     private javax.swing.JMenuItem signUp;
+    private javax.swing.JMenuItem stopAudioStream;
+    private javax.swing.JMenuItem stopVideoStream;
     private javax.swing.JMenuItem video;
     // End of variables declaration//GEN-END:variables
 }

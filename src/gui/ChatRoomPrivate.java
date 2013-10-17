@@ -199,23 +199,25 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
 
     private void inviteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inviteButtonActionPerformed
         // TODO add your handling code here:
-       inviteList.setList(client.userList);
-       inviteList.setTitle("Guest List");
-       inviteList.setVisible(true);
-       System.out.println(inviteList.getSelectedGuest());
-       if(userList.contains(inviteList.getSelectedGuest())){
-           JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
-                   "Initation Error",JOptionPane.INFORMATION_MESSAGE);
-       }
-       else if(inviteList.getSelectedGuest().equals(""))
-       {
-           
-       }
-       else{
-           
-           client.sendInvitation(roomKey, inviteList.getSelectedGuest() , "");      
-           inviteList.resetGuest();
-       }
+        Vector<String> s = new Vector<String>(client.userList);
+        s.remove(client.username);
+        inviteList.setList(s);
+        inviteList.setTitle("Guest List");
+        inviteList.setVisible(true);
+        System.out.println(inviteList.getSelectedGuest());
+        if(userList.contains(inviteList.getSelectedGuest())){
+            JOptionPane.showMessageDialog(this,inviteList.getSelectedGuest()+" is already in this room.",
+                    "Initation Error",JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(inviteList.getSelectedGuest().equals(""))
+        {
+
+        }
+        else{
+
+            client.sendInvitation(roomKey, inviteList.getSelectedGuest() , "");      
+            inviteList.resetGuest();
+        }
     }//GEN-LAST:event_inviteButtonActionPerformed
 
     private void cryButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cryButton1ActionPerformed
@@ -298,6 +300,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         userList.add(user);
         userListPanel.setListData(userList);
         sendToCombo.removeAllItems();
+        sendToCombo.addItem("To All");
         if(!user.equals(client.username) )
             sendToCombo.addItem(user);
     }
