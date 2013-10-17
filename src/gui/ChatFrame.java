@@ -296,13 +296,16 @@ public class ChatFrame extends javax.swing.JFrame {
     private void videoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoActionPerformed
         // TODO add your handling code here:
         if(!client.getLogState()) return;
-        GuestListWindow sendTargetWindow = new GuestListWindow(this,"Speak to");
+
+        GuestListWindow sendTargetWindow = new GuestListWindow(this,"See");
         Vector<String> s = new Vector<String>(client.userList);
         s.remove(client.username);
         sendTargetWindow.setList(s);
+        sendTargetWindow.setList(client.userList);
+
         sendTargetWindow.setVisible(true);
         if(!sendTargetWindow.continueToSend) return;
-       // client.sendSpeakInvite(sendTargetWindow.getSelectedGuest());
+        client.sendVisual(sendTargetWindow.getSelectedGuest());
     }//GEN-LAST:event_videoActionPerformed
 
     private void signUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpActionPerformed

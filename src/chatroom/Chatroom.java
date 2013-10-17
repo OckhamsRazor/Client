@@ -4,9 +4,11 @@
  */
 package chatroom;
 
+import com.sun.jna.NativeLibrary;
 import java.io.IOException;
 import gui.ChatFrame;
 import sound.Sound;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 /**
  *
@@ -20,7 +22,15 @@ public class Chatroom {
     private static ChatFrame _FrameObject;
     
     public static void main(String[] args) throws IOException {
+<<<<<<< HEAD
         _FrameObject = new ChatFrame("EEMSN");
+=======
+        NativeLibrary.addSearchPath(
+                RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files (x86)\\VideoLAN\\VLC"
+            );
+        
+        _FrameObject = new ChatFrame();
+>>>>>>> master
         _FrameObject.setVisible(true);
         _FrameObject.setLocation(700,300);
         // TODO code application logic here
