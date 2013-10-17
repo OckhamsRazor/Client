@@ -20,17 +20,17 @@
             </bookmark>
             <bookmark id="12">
                 <name/>
-                <line>394</line>
+                <line>395</line>
                 <key/>
             </bookmark>
             <bookmark id="13">
                 <name/>
-                <line>416</line>
+                <line>417</line>
                 <key/>
             </bookmark>
             <bookmark id="7">
                 <name/>
-                <line>481</line>
+                <line>482</line>
                 <key/>
             </bookmark>
         </file>
@@ -43,4 +43,7 @@
             </bookmark>
         </file>
     </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/Users/User/Desktop/Client/src/chatroom/Client.java</file>
+    </open-files>
 </project-private>
