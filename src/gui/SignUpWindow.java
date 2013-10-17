@@ -26,6 +26,7 @@ public class SignUpWindow extends javax.swing.JDialog {
     public SignUpWindow(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
+        setLocationRelativeTo(parent);
         continueToSignUp = false;
         
     }
