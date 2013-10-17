@@ -299,8 +299,6 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
    public void addUser(String user){
         userList.add(user);
         userListPanel.setListData(userList);
-        sendToCombo.removeAllItems();
-        sendToCombo.addItem("To All");
         if(!user.equals(client.username) )
             sendToCombo.addItem(user);
     }
