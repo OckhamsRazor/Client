@@ -179,10 +179,12 @@ public class LogWindow extends javax.swing.JDialog {
         // check name not blank
         if(usernameText.getText().equals("")){
             JOptionPane.showMessageDialog(this,"Please enter username","",JOptionPane.INFORMATION_MESSAGE);
+            continueToLog = false;
         }
         else if(usernameText.getText().contains(" ")){
             JOptionPane.showMessageDialog(null,"Don't leave space in username!!","",JOptionPane.INFORMATION_MESSAGE);
             usernameText.setText("");
+            continueToLog = false;
         }
         else{
             username = usernameText.getText();

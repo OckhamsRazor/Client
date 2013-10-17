@@ -88,7 +88,6 @@ public class Client implements Runnable{
         userList = new Vector<String>();
         // file transmission
         recvFileMap = new HashMap<String,File>();
-        threadRun = true;
     }
   
     public void setServer(){
@@ -99,7 +98,6 @@ public class Client implements Runnable{
          try
         { 
             socket = new Socket(InetAddress.getByName(serverIP),port);
-            
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             i=new DataInputStream(in);
@@ -110,9 +108,11 @@ public class Client implements Runnable{
             {
                 System.out.println("Connetion fail!!");
             }
-            
+            thread=new Thread(this);
+            thread.start();
             isConnected=true;
             System.out.println("Connetion success!!");
+            JOptionPane.showConfirmDialog(frame, "Welcome to EE Paradise!\nPlease sign up or log in your account.","Welcome",JOptionPane.OK_OPTION);
         }
         catch (IOException ex)
         {
@@ -142,23 +142,23 @@ public class Client implements Runnable{
         if(!logWindow.continueToLog) return;
         username = logWindow.username;
         password = logWindow.password; 
-        chatHall = new ChatRoomHall(this);
         
+        send("LOGIN\000"+ username+"\000"+password);        
+    /*
         try {
             sendName();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(threadRun){
+  
             thread=new Thread(this);
             thread.start();
-        }
         isLoggedIn = true;
         roomList.add(chatHall);
         roomMap.put(0,chatHall); // cannot add friends in Hall
         frame.addHall(chatHall);
         chatHall.enterMessage(username);
-      
+      */
     }
     public void sendName() throws IOException
     {       
@@ -193,6 +193,28 @@ public class Client implements Runnable{
             }
             System.out.println("hi");
             }
+    }
+    private void logInSuccecess(){
+        isLoggedIn = true;
+        chatHall = new ChatRoomHall(this);
+        roomList.add(chatHall);
+        roomMap.put(0,chatHall); // cannot add friends in Hall
+        frame.addHall(chatHall);
+        chatHall.enterMessage(username);
+    }
+        
+    public void logOut() throws IOException
+    {
+        send("LOGOUT");
+        // log state reset
+        isLoggedIn = false;
+        // user info reset
+        username = "";
+        password = "";
+        // room info reset
+        roomMap = new HashMap();
+        roomList = new ArrayList();
+        roomCount = 0;
     }
 
     public void send(String msg)
@@ -298,21 +320,7 @@ public class Client implements Runnable{
         int sender_port=5570;
         send("SPEAK_ACK\000"+Integer.toString(sender_port)+"\000");
     }
-    
-    public void logOut() throws IOException
-    {
-        send("LOGOUT");
-        // log state reset
-        isLoggedIn = false;
-        // user info reset
-        username = "";
-        password = "";
-        // room info reset
-        roomMap = new HashMap();
-        roomList = new ArrayList();
-        roomCount = 0;
-        threadRun = false;
-    }
+
     
     private void rvRoomNumber(int myRoomNumber, int roomKeyAssigned)
     {
@@ -484,6 +492,9 @@ public class Client implements Runnable{
         //String[] string2=message[0].split("\001");
         switch(message[0])
         {
+            case("\001LOGINACK"):
+                logInSuccecess();
+                break;
             case("\001NEWROOM"):
                 rvRoomNumber(Integer.parseInt(message[1]),Integer.parseInt(message[2]));
                 break;
@@ -556,7 +567,7 @@ public class Client implements Runnable{
         {
             try {
                 String msg=i.readUTF();
-                System.out.println(msg+" msg");
+                System.out.println("RUN_THREAD:" +msg);
                 parseMsg(msg);
 
             } catch (IOException ex) {
