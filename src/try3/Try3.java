@@ -97,15 +97,15 @@ public class Try3 extends VlcjTest {
     private final JLabel mediaLabel;
     private final JTextField mediaTextField;
 
-    private final JLabel streamToLabel;
-    private final JTextField streamToTextField;
-    private final JButton sendButton;
-    private final JButton sendSnapshotButton;
+    //private final JLabel streamToLabel;
+    //private final JTextField streamToTextField;
+    //private final JButton sendButton;
+    //private final JButton sendSnapshotButton;
 
-    private final JLabel streamFromLabel;
-    private final JTextField streamFromTextField;
-    private final JButton receiveButton;
-    private final JButton receiveSnapshotButton;
+    //private final JLabel streamFromLabel;
+    //private final JTextField streamFromTextField;
+    //private final JButton receiveButton;
+    //private final JButton receiveSnapshotButton;
 
     private final CanvasVideoSurface localVideoSurface;
     private final CanvasVideoSurface remoteVideoSurface;
@@ -125,6 +125,7 @@ public class Try3 extends VlcjTest {
     }*/
 
     public Try3() {
+         
         mediaPlayerFactory = new MediaPlayerFactory();
         localMediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
         remoteMediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
@@ -161,22 +162,22 @@ public class Try3 extends VlcjTest {
 
         localStreamControls.add(Box.createHorizontalStrut(4));
 
-        streamToLabel = new JLabel("Stream To:");
-        streamToLabel.setDisplayedMnemonicIndex(7);
-        localStreamControls.add(streamToLabel);
+        //streamToLabel = new JLabel("Stream To:");
+        //streamToLabel.setDisplayedMnemonicIndex(7);
+        //localStreamControls.add(streamToLabel);
 
-        streamToTextField = new JTextField();
-        streamToTextField.setFocusAccelerator('t');
-        streamToTextField.setColumns(12);
-        localStreamControls.add(streamToTextField);
+        //streamToTextField = new JTextField();
+        //streamToTextField.setFocusAccelerator('t');
+        //streamToTextField.setColumns(12);
+        //localStreamControls.add(streamToTextField);
 
-        sendButton = new JButton("Send");
-        sendButton.setMnemonic('s');
-        localStreamControls.add(sendButton);
+        //sendButton = new JButton("Send");
+        //sendButton.setMnemonic('s');
+        //localStreamControls.add(sendButton);
 
-        sendSnapshotButton = new JButton("Snap");
-        sendSnapshotButton.setMnemonic('n');
-        localStreamControls.add(sendSnapshotButton);
+        //sendSnapshotButton = new JButton("Snap");
+        //sendSnapshotButton.setMnemonic('n');
+        //localStreamControls.add(sendSnapshotButton);
 
         localVideoSurface = mediaPlayerFactory.newVideoSurface(localCanvas);
         localMediaPlayer.setVideoSurface(localVideoSurface);
@@ -194,24 +195,24 @@ public class Try3 extends VlcjTest {
         remoteStreamControls = new JPanel();
         remoteStreamControls.setLayout(new BoxLayout(remoteStreamControls, BoxLayout.X_AXIS));
 
-        streamFromLabel = new JLabel("Stream From:");
-        streamFromLabel.setDisplayedMnemonicIndex(7);
-        remoteStreamControls.add(streamFromLabel);
+        //streamFromLabel = new JLabel("Stream From:");
+        //streamFromLabel.setDisplayedMnemonicIndex(7);
+        //remoteStreamControls.add(streamFromLabel);
 
         remoteStreamControls.add(Box.createHorizontalStrut(4));
 
-        streamFromTextField = new JTextField();
-        streamFromTextField.setFocusAccelerator('f');
-        streamFromTextField.setColumns(12);
-        remoteStreamControls.add(streamFromTextField);
+        //streamFromTextField = new JTextField();
+        //streamFromTextField.setFocusAccelerator('f');
+        //streamFromTextField.setColumns(12);
+        //remoteStreamControls.add(streamFromTextField);
 
-        receiveButton = new JButton("Receive");
-        receiveButton.setMnemonic('r');
-        remoteStreamControls.add(receiveButton);
+        //receiveButton = new JButton("Receive");
+        //receiveButton.setMnemonic('r');
+        //remoteStreamControls.add(receiveButton);
 
-        receiveSnapshotButton = new JButton("Snap");
-        receiveSnapshotButton.setMnemonic('a');
-        remoteStreamControls.add(receiveSnapshotButton);
+        //receiveSnapshotButton = new JButton("Snap");
+        //receiveSnapshotButton.setMnemonic('a');
+        //remoteStreamControls.add(receiveSnapshotButton);
 
         remoteVideoSurface = mediaPlayerFactory.newVideoSurface(remoteCanvas);
         remoteMediaPlayer.setVideoSurface(remoteVideoSurface);
@@ -233,6 +234,7 @@ public class Try3 extends VlcjTest {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
 
+        /*
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -259,23 +261,24 @@ public class Try3 extends VlcjTest {
             public void actionPerformed(ActionEvent e) {
                 remoteMediaPlayer.saveSnapshot();
             }
-        });
+        });*/
     }
 
-    private void start() {
+    public void start() {
         mediaTextField.setText(!RuntimeUtil.isWindows() ? "v4l2:///dev/video0" : "dshow://");
 
-        streamToTextField.setText("230.0.0.1:5555");
-        streamFromTextField.setText("230.0.0.1:5555");
+        //streamToTextField.setText("230.0.0.1:5555");
+        //streamFromTextField.setText("230.0.0.1:5555");
 
         frame.setVisible(true);
     }
 
-    private void send() {
+    public void send(String s) {
         String mrl = mediaTextField.getText();
         if(mrl.length() > 0) {
-            String streamTo = streamToTextField.getText();
-
+            //String streamTo = "230.0.0.1:5555";
+            String streamTo =s;
+            
             String[] parts = streamTo.split(":");
             if(parts.length == 2) {
                 String host = parts[0];
@@ -294,14 +297,16 @@ public class Try3 extends VlcjTest {
         }
     }
 
-    private void receive() {
-        String mrl = streamFromTextField.getText();
+    public void receive(String s) {
+        //streamFromTextField.getText();
+        //String mrl = "230.0.0.1:5555";
+        String mrl = s;
         remoteMediaPlayer.playMedia("rtp://@" + mrl);
     }
 
     private static String formatRtpStream(String serverAddress, int serverPort) {
         StringBuilder sb = new StringBuilder(60);
-        sb.append(":sout=#transcode{vcodec=mp2v,vb=2048,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:duplicate{dst=display,dst=rtp{dst=");
+        sb.append(":sout=#transcode{vcodec=mp4v,vb=2048,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:duplicate{dst=display,dst=rtp{dst=");
         sb.append(serverAddress);
         sb.append(",port=");
         sb.append(serverPort);
