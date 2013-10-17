@@ -254,30 +254,33 @@ public class ChatRoomHall extends javax.swing.JPanel {
         inputTextPane.setText("");
     }
     private void showMessage(){
-        String[] tokens = inputText.split("\002");
-//        assert tokens.length > 0;
-        if(whisper){
-            String receiver = (String)sendToCombo.getSelectedItem();
-            dialogText = dialogText + "\n" + "( TO "+ receiver + " )"+client.username + " :";// + inputText;
-        }
-        else{
-            dialogText = dialogText + "\n" + client.username + " :";// + inputText;
-        }
-        dialogTextPane.setText(dialogText);
+        try {
+            String[] tokens = inputText.split("\002");
+            String newText;
+            if(whisper){
+                String receiver = (String)sendToCombo.getSelectedItem();
+                newText = "\n" + "( TO "+ receiver + " )"+client.username + " :";// + inputText;
+            }
+            else{
+                newText = "\n" + client.username + " :";// + inputText;
+            }
+            dialogTextPane.setCaretPosition(dialogTextPane.getStyledDocument().getLength());
+            dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), newText, null);
         
-        for (String token : tokens) {
-            String[] subTokens = token.split("\003");
-            assert subTokens.length == 2;
-            String type = subTokens[0];
-            String content = subTokens[1];
-            System.out.println(type);
-            System.out.println(content);
-            //StyledDocument doc = dialogTextPane.getStyledDocument();
+            for (String token : tokens) {
+                if (token.length() == 0) continue;
             
-            try {
+                String[] subTokens = token.split("\003");
+                String type = subTokens[0];
+                System.out.println(type);
+                String content = subTokens[1];
+                System.out.println(content);
+            //StyledDocument doc = dialogTextPane.getStyledDocument();
+                
+                dialogTextPane.setCaretPosition(dialogTextPane.getStyledDocument().getLength());
                 if (type.equals("m")) {
                     //doc.insertString(doc.getLength(), content, null);
-                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), type, null);
+                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), content, null);
                 }
                 else if (type.equals("p")) {
                     dialogTextPane.insertIcon(new ImageIcon(content));
@@ -286,34 +289,39 @@ public class ChatRoomHall extends javax.swing.JPanel {
                     System.out.println("WRONG MESSAGE QQQQQQQQQQQQQQQQQQQQ");
                 }
             }
-            catch (BadLocationException ex) {
-                System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
-            }
+        }
+        catch (BadLocationException ex) {
+            System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
         }
     }
+    
     public void showRecvMessage(String sender, String msg, boolean whisper_recv){
-        String[] tokens = msg.split("\002");
-        if(whisper_recv){
-                dialogText = dialogText + "\n" + "( FROM "+ sender+ " )" + " :";// + msg;
-        }
-        else{
-            dialogText = dialogText + "\n" + sender + " :";// + msg;
-        }
-        dialogTextPane.setText(dialogText);
+        try {
+            String newText;
+            String[] tokens = msg.split("\002");
+            if(whisper_recv){
+                newText = "\n" + "( FROM "+ sender+ " )" + " :";// + msg;
+            }
+            else{
+                newText = "\n" + sender + " :";// + msg;
+            }
+            dialogTextPane.setCaretPosition(dialogTextPane.getStyledDocument().getLength());
+            dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), newText, null);
         
-        for (String token : tokens) {
-            String[] subTokens = token.split("\003");
-            assert subTokens.length == 2;
-            String type = subTokens[0];
-            String content = subTokens[1];
-            System.out.println(type);
-            System.out.println(content);
-            //StyledDocument doc = dialogTextPane.getStyledDocument();
+            for (String token : tokens) {
+                if (token.length() == 0) continue;
             
-            try {
+                String[] subTokens = token.split("\003");
+                String type = subTokens[0];
+                System.out.println(type);
+                String content = subTokens[1];
+                System.out.println(content);
+            //StyledDocument doc = dialogTextPane.getStyledDocument();
+                
+                dialogTextPane.setCaretPosition(dialogTextPane.getStyledDocument().getLength());
                 if (type.equals("m")) {
                     //doc.insertString(doc.getLength(), content, null);
-                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), type, null);
+                    dialogTextPane.getStyledDocument().insertString(dialogTextPane.getCaretPosition(), content, null);
                 }
                 else if (type.equals("p")) {
                     dialogTextPane.insertIcon(new ImageIcon(content));
@@ -322,10 +330,10 @@ public class ChatRoomHall extends javax.swing.JPanel {
                     System.out.println("WRONG MESSAGE QQQQQQQQQQQQQQQQQQQQ");
                 }
             }
-            catch (BadLocationException ex) {
-                System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
-            }
-        }        
+        }
+        catch (BadLocationException ex) {
+            System.out.println("BAD LOCATION QQQQQQQQQQQQQQQQQQQQ");
+        }
     }
     public void enterMessage(String user){
         dialogText = dialogText + "\n" +"( " + user +  " )"+" enters this room";
