@@ -185,6 +185,11 @@ public class ChatFrame extends javax.swing.JFrame {
         jMenu6.add(video);
 
         stopVideoStream.setText("Stop Video stream");
+        stopVideoStream.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopVideoStreamActionPerformed(evt);
+            }
+        });
         jMenu6.add(stopVideoStream);
 
         jMenuBar1.add(jMenu6);
@@ -314,15 +319,24 @@ public class ChatFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please connect to server first.","Log error",JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+        else if(client.getLogState()) {
+            JOptionPane.showMessageDialog(this, "Please log out first.","Log error",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         client.signUp();
     }//GEN-LAST:event_signUpActionPerformed
 
     private void stopAudioStreamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopAudioStreamActionPerformed
         // TODO add your handling code here:
-        if(!client.audioStreamInUse) return;
+//        if(!client.audioStreamInUse) return;
         client.sound.disconnect();
         JOptionPane.showMessageDialog(this, "Audio streaming is disconnected.", "Closing stream ", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_stopAudioStreamActionPerformed
+
+    private void stopVideoStreamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopVideoStreamActionPerformed
+        // TODO add your handling code here:
+        client.trying.stop();
+    }//GEN-LAST:event_stopVideoStreamActionPerformed
 
     // should log in first!!
     public void addHall(ChatRoomHall hall){

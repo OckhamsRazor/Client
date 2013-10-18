@@ -92,11 +92,11 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
         for(int c=0; c<chr.length; c++) {
             String v = mp.get(new Integer(c));
             if(v == null) {
-                tt.append("\002p\003");
+                tt.append("\002m\003");
                 tt.append(chr[c]);
             }
             else {
-                tt.append("\002m\003");
+                tt.append("\002p\003");
                 tt.append(v);
             }
         }
@@ -224,7 +224,7 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
                 whisper = false;
             }
             //  client.send(parseInputText(inputTextPane.getText()));
-            inputText = inputTextPane.getText();
+            inputText = getInputText(inputTextPane);
             refreshInputPane();
             System.out.println(inputText);
             if(!inputText.equals("") ){
@@ -410,8 +410,6 @@ public class ChatRoomPrivate extends javax.swing.JPanel {
    public void addUser(String user){
         userList.add(user);
         userListPanel.setListData(userList);
-        sendToCombo.removeAllItems();
-        sendToCombo.addItem("To All");
         if(!user.equals(client.username) )
             sendToCombo.addItem(user);
     }

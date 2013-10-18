@@ -25,7 +25,7 @@ public class Chatroom {
 
         _FrameObject = new ChatFrame("EEMSN");
         NativeLibrary.addSearchPath(
-                RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files (x86)\\VideoLAN\\VLC"
+                RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files\\VideoLAN\\VLC"
             );
         
         _FrameObject.setVisible(true);
