@@ -313,5 +313,11 @@ public class Try3 extends VlcjTest {
         sb.append(",mux=ts}}");
         return sb.toString();
     }
+    
+    public void stop() {
+        localMediaPlayer.stop();
+        remoteMediaPlayer.stop();
+        frame.setVisible(false);
+    }
 }
 
